@@ -91,3 +91,97 @@
   #review-panel .plan-form { padding: 16px; }
   .flow-details { padding-inline: 12px; }
 }
+
+/* --- VaultForge Modern UI Enhancements --- */
+.btn-export-pdf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #15803d;
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: 1px solid #166534;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(21, 128, 61, 0.25);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+.btn-export-pdf:hover:not(:disabled) {
+  background: #166534;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.35);
+}
+.btn-export-pdf:active:not(:disabled) {
+  transform: translateY(0);
+}
+.btn-export-pdf:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.quick-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: #edf1e6;
+  border: 1px solid #d4ded0;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-top: 24px;
+  box-shadow: 0 2px 8px rgba(36, 39, 32, 0.04);
+}
+.quick-action-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.quick-action-badge {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a2e1d;
+  background: #d8e6d2;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: Geist, monospace;
+}
+.quick-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.selectors select {
+  transition: border-color 0.2s, box-shadow 0.2s;
+  border-radius: 6px;
+}
+.selectors select:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+  outline: none;
+}
+.hero-quick-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  border-radius: 6px;
+  background: #c6421d;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(198, 66, 29, 0.25);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hero-quick-btn:hover {
+  background: #a93514;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(198, 66, 29, 0.35);
+}

@@ -331,7 +331,16 @@ and prepare your first build.</p>
         <div class="build-handle-option" id="drawer-rails-choice"><label><input type="checkbox" id="drawer-geared-rails" checked onchange="onConfigurationChange()"><span data-preparation-copy="gearedRails"></span></label><p data-preparation-copy="gearedRailsHint"></p></div>
         <div id="sustainer-lid-choice"><label for="roof-mode" id="label-roof-mode">Lid construction</label><select id="roof-mode" onchange="onConfigurationChange()"></select></div>
         <div id="configuration-help"><h4 data-flow-copy="sizeHelp"></h4><div id="drawer-configuration-note"></div><div id="sustainer-configuration-help"><p class="source-note"><a href="#workspace" onclick="openManualAt('01', 9)" id="interior-source"></a> · <a href="#workspace" onclick="openManualAt('01', 12)" id="sustainer-naming-source"></a></p><div id="sustainer-support-note"></div></div></div></details>
-      <div class="flow-next"><button type="button" class="button primary" id="flow-review" onclick="WorkbenchFlow.review()" data-flow-copy="reviewAction"></button><p id="flow-choice-summary"></p></div>
+      <div class="quick-action-bar">
+        <div class="quick-action-info">
+          <span class="quick-action-badge" id="quick-badge">S3 · 1F</span>
+          <p id="flow-choice-summary" style="margin:0; font-size:12px; color:var(--muted);"></p>
+        </div>
+        <div class="quick-action-buttons">
+          <button type="button" class="button primary" id="flow-review" onclick="WorkbenchFlow.review()" style="min-height:40px; padding:10px 18px; margin:0;" data-flow-copy="reviewAction">Review required parts</button>
+          <button type="button" class="btn-export-pdf" id="config-quick-export-pdf" title="直接导出当前配置所需螺丝及五金清单">🖨️ 导出采购单 (PDF)</button>
+        </div>
+      </div>
     </section>
 
     <section id="review-panel" aria-labelledby="flow-review-title" hidden>
@@ -954,6 +963,12 @@ function onConfigurationChange() {
   populateDropdowns();
   if (document.getElementById('drawer-roof').value !== 'grid') document.getElementById('drawer-top-handle').checked = false;
   savedConfigurations[currentSystem] = readConfiguration();
+  const qBadge = document.getElementById('quick-badge');
+  if (qBadge) {
+    const cfg = readConfiguration();
+    const sysLabel = currentSystem === 'drawers' ? (currentLang === 'zh' ? '抽屉' : 'Drawer') : (currentLang === 'zh' ? '箱体' : 'Sustainer');
+    qBadge.textContent = `${sysLabel} ${cfg.width}${cfg.depth} · ${cfg.height || '1F'}`;
+  }
   renderList();
   document.getElementById('plan-add-status').textContent = '';
   saveWorkspace();
@@ -1068,13 +1083,15 @@ ModelLibrary.init({ language: currentLang, selection: workspaceStore.value.model
 updateStaticText();
 restoreConfiguration(currentSystem, savedConfigurations[currentSystem]);
 ModificationView.restore(workspaceStore.value.modifications);
-document.getElementById('config-export-pdf')?.addEventListener('click', () => {
+const triggerCurrentExport = () => {
   const selected = { system: currentSystem, configuration: readConfiguration() };
   const build = BuildPlan.entry({ ...selected, id: 'current', count: 1 });
   if (window.PurchaseBOM) {
     PurchaseBOM.exportPDF({ builds: [build], language: currentLang });
   }
-});
+};
+document.getElementById('config-export-pdf')?.addEventListener('click', triggerCurrentExport);
+document.getElementById('config-quick-export-pdf')?.addEventListener('click', triggerCurrentExport);
 PrintPlanView.init({ store: workspaceStore, selection: () => ({ system: currentSystem, configuration: readConfiguration() }), restore: build => {
   savedConfigurations[currentSystem] = readConfiguration();
   restoreConfiguration(build.system, build.configuration);
