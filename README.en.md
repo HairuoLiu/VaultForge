@@ -46,6 +46,8 @@ Choose a configuration → enter the module count → **Add to print plan** → 
 
 Local-file mode has been verified in desktop Chrome; other browsers have not received equivalent testing. 3D previews require WebGL 2, and dimensions are interpreted as millimeters. If a PDF cannot be displayed inline, open it in a new tab or download it.
 
+When launched with `启动预览.command` (macOS) or `启动预览.bat` (Windows), the 3D preview includes **Show in folder**, which selects the original STL in Finder / File Explorer. Python 3 is required. Place the resource pack in the project directory or its parent, or run `python3 scripts/preview-server.py --resource-root "/path/to/Vault"` and select that same folder on the page. This button is hidden when opening the HTML file directly.
+
 Select one resource pack at a time. Missing or conflicting files are flagged. Saving a copy does not overwrite the original. Hardware quantities follow manual references; check your actual installation requirements before assembly.
 
 ## Development and tests

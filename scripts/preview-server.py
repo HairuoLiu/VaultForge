@@ -12,7 +12,22 @@ from pathlib import Path, PureWindowsPath
 import webbrowser
 
 
+CATEGORIES = ('01. DRAWERS', '02. SUSTAINERS', '03. MODIFICATIONS')
+
+
+def find_resource_root(project, configured=None):
+    candidates = [Path(configured).expanduser().resolve()] if configured else [project, project.parent]
+    return next((root for root in candidates if any((root / name).is_dir() for name in CATEGORIES)), None)
+
+
 class PreviewHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/__vault/capabilities':
+            if self.headers.get('Host') != f'127.0.0.1:{self.server.server_port}':
+                return self.send_json(403, {'error': 'origin'})
+            return self.send_json(200, {'service': 'vault-workbench', 'revealLocal': sys.platform in ('darwin', 'win32')})
+        super().do_GET()
+
     def send_json(self, status, data):
         content = json.dumps(data).encode('utf-8')
         self.send_response(status)
@@ -39,16 +54,22 @@ class PreviewHandler(SimpleHTTPRequestHandler):
             relative = body.get('path') if isinstance(body, dict) else None
             if not isinstance(relative, str) or not relative or '\x00' in relative:
                 raise ValueError('Invalid path')
-            root = Path(self.directory).resolve()
+            root = getattr(self.server, 'resource_root', Path(self.directory).resolve())
+            if root is None:
+                return self.send_json(404, {'error': 'resource_root'})
             requested = Path(relative)
             if requested.is_absolute() or '..' in requested.parts:
                 return self.send_json(403, {'error': 'path'})
             target = (root / requested).resolve()
             resolved = target.relative_to(root)
-            if resolved.parts[0] not in ('01. DRAWERS', '02. SUSTAINERS', '03. MODIFICATIONS') or target.suffix.lower() != '.stl':
+            if not resolved.parts or resolved.parts[0] not in CATEGORIES or target.suffix.lower() != '.stl':
                 return self.send_json(403, {'error': 'path'})
             if not target.is_file():
                 return self.send_json(404, {'error': 'missing'})
+            # Refuse mismatched metadata or a file changed since folder selection.
+            stat = target.stat()
+            if body.get('size') != stat.st_size or body.get('lastModified') != stat.st_mtime_ns // 1_000_000:
+                return self.send_json(409, {'error': 'mismatch'})
         except (ValueError, TypeError, OSError):
             return self.send_json(400, {'error': 'invalid_request'})
         if sys.platform not in ('darwin', 'win32'):
@@ -78,13 +99,22 @@ class PreviewHandler(SimpleHTTPRequestHandler):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--no-browser', action='store_true')
+    parser.add_argument('--resource-root', default=os.environ.get('VAULT_RESOURCE_ROOT'), help='Path to the extracted Vault resource folder')
     args = parser.parse_args()
     root = Path(__file__).resolve().parent.parent
+    resource_root = find_resource_root(root, args.resource_root)
+    if args.resource_root and resource_root is None:
+        parser.error('No Vault resource folders found at --resource-root / VAULT_RESOURCE_ROOT.')
     handler = partial(PreviewHandler, directory=str(root))
     with ThreadingHTTPServer(('127.0.0.1', 0), handler) as server:
+        server.resource_root = resource_root
         url = f'http://127.0.0.1:{server.server_port}/index.html'
         print(f'VAULT 预览已启动：{url}', flush=True)
         print('在页面中选择 Vault 文件夹，即可预览 STL、阅读说明书和保存副本。', flush=True)
+        if resource_root:
+            print(f'定位原文件使用的资源目录：{resource_root}', flush=True)
+        else:
+            print('未找到本地资源目录；如需定位原文件，请通过 --resource-root 指定 Vault 文件夹。', flush=True)
         print('也可直接双击 index.html 使用，无需运行本启动脚本。', flush=True)
         print('仅本机可访问。使用期间请保留此窗口；关闭窗口或按 Ctrl+C 结束。', flush=True)
         if not args.no_browser:

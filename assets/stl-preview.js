@@ -16,7 +16,12 @@
       keyboard: 'Focusable 3D canvas. Drag to rotate, scroll to zoom. Arrow keys pan; Ctrl + arrows rotate.',
       units: 'STL has no unit metadata. Dimensions below are interpreted as millimeters.',
       dimensions: 'Dimensions', triangles: 'triangles', large: 'Large model · Loading in chunks',
-      fileSize: 'File size', retry: 'Retry'
+      fileSize: 'File size', retry: 'Retry',
+      revealLocal: 'Show in folder', revealingLocal: 'Locating…',
+      revealedLocal: 'Requested the file manager to select the original file.',
+      localUnavailable: 'Cannot reach the preview service. Restart the launcher and reopen its page.',
+      localMismatch: 'The selected file does not match the service’s resource folder. Select that folder again, or restart the service with --resource-root pointing to your Vault folder.',
+      localFailed: 'Could not locate the file. Check that your file manager is available, then try again.'
     },
     zh: {
       preview: '3D 预览', download: '保存副本', close: '关闭预览', reset: '重置视角', front: '正视图', top: '俯视图',
@@ -33,7 +38,12 @@
       keyboard: '3D 预览画布：拖动旋转，滚轮缩放；方向键平移，Ctrl 加方向键旋转。',
       units: 'STL 未记录长度单位，下方尺寸按毫米解释。',
       dimensions: '模型尺寸', triangles: '个三角面', large: '大模型 · 正在分块加载',
-      fileSize: '文件大小', retry: '重新加载'
+      fileSize: '文件大小', retry: '重新加载',
+      revealLocal: '定位到文件', revealingLocal: '正在定位…',
+      revealedLocal: '已请求在文件管理器中选中原文件。',
+      localUnavailable: '无法连接预览服务，请重新运行启动脚本并打开其页面。',
+      localMismatch: '所选文件与服务的资源目录不匹配。请重新选择该目录，或通过 --resource-root 指定 Vault 文件夹后重启服务。',
+      localFailed: '定位失败，请确认文件管理器可用后重试。'
     }
   };
   let language = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
@@ -47,7 +57,7 @@
     <div class="stl-toolbar"><div class="stl-views"><button type="button" id="stl-reset" data-stl-text="reset" disabled></button><button type="button" id="stl-front" data-stl-text="front" disabled></button><button type="button" id="stl-top" data-stl-text="top" disabled></button></div><span id="stl-file-size"></span></div>
     <div class="stl-stage" id="stl-stage"><div class="stl-canvas-host" id="stl-canvas-host"></div><div class="stl-message" id="stl-message"><span class="stl-cube" aria-hidden="true">◇</span><p id="stl-status" role="status" aria-live="polite"></p><progress id="stl-progress" max="100" hidden></progress><div class="stl-pickers" id="stl-pickers"><button type="button" id="stl-folder-button" data-stl-text="chooseFolder"></button><button type="button" id="stl-retry" data-stl-text="retry" hidden></button></div></div></div>
     <div class="stl-meta"><span id="stl-dimensions"></span><span id="stl-triangles"></span></div>
-    <footer class="stl-footer"><div><p data-stl-text="hint"></p><p class="stl-units" data-stl-text="units"></p></div><a id="stl-download" class="button primary" download data-stl-text="download"></a></footer>
+    <footer class="stl-footer"><div><p data-stl-text="hint"></p><p class="stl-units" data-stl-text="units"></p><p id="stl-local-status" role="status" aria-live="polite" hidden></p></div><div class="stl-footer-actions"><button type="button" id="stl-reveal-local" class="button" data-stl-text="revealLocal" hidden disabled></button><a id="stl-download" class="button primary" download data-stl-text="download"></a></div></footer>
     `;
   document.body.append(dialog);
   const $ = id => document.getElementById(id);
@@ -62,6 +72,55 @@
   let progressValue = null;
   let fileSize = 0;
   let modelInfo = null;
+  let localAvailable = false;
+  let localBusy = false;
+  let localStatus = '';
+  let localRequest = 0;
+
+  function updateLocalAction() {
+    $('stl-reveal-local').hidden = !localAvailable;
+    $('stl-reveal-local').disabled = localBusy || !current || !VaultResources.getFile(current.path);
+    $('stl-reveal-local').textContent = t()[localBusy ? 'revealingLocal' : 'revealLocal'];
+    $('stl-local-status').hidden = !localStatus;
+    $('stl-local-status').textContent = t()[localStatus] || '';
+  }
+
+  async function detectLocalService() {
+    const request = ++localRequest;
+    localAvailable = false; localBusy = false; localStatus = '';
+    updateLocalAction();
+    if (location.protocol !== 'http:' || location.hostname !== '127.0.0.1') return;
+    try {
+      const response = await fetch('/__vault/capabilities', { cache: 'no-store', signal: AbortSignal.timeout(3000) });
+      const info = response.ok ? await response.json() : null;
+      if (request !== localRequest) return;
+      localAvailable = info?.service === 'vault-workbench' && info.revealLocal === true;
+      updateLocalAction();
+    } catch (_) { /* Ordinary static servers do not offer native file actions. */ }
+  }
+
+  async function revealLocalFile() {
+    const file = current && VaultResources.getFile(current.path);
+    if (!localAvailable || localBusy || !file) return;
+    const request = ++localRequest;
+    localBusy = true; localStatus = '';
+    updateLocalAction();
+    try {
+      const response = await fetch('/__vault/reveal', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: current.path, size: file.size, lastModified: file.lastModified }),
+        signal: AbortSignal.timeout(8000)
+      });
+      const result = await response.json();
+      if (request !== localRequest) return;
+      localStatus = response.ok && result.ok ? 'revealedLocal' :
+        ['resource_root', 'missing', 'mismatch'].includes(result.error) ? 'localMismatch' : 'localFailed';
+    } catch (_) {
+      if (request === localRequest) localStatus = 'localUnavailable';
+    } finally {
+      if (request === localRequest) { localBusy = false; updateLocalAction(); }
+    }
+  }
 
   function setState(next) {
     state = next;
@@ -93,6 +152,7 @@
     $('stl-progress').setAttribute('aria-label', t().parsing);
     if (sceneState) sceneState.renderer.domElement.setAttribute('aria-label', t().keyboard);
     setState(state);
+    updateLocalAction();
   }
 
   function cancelJob() {
@@ -271,6 +331,7 @@
       dialog.showModal();
     }
     $('stl-close').focus();
+    detectLocalService();
     startLoad();
   }
 
@@ -293,8 +354,11 @@
   }
 
   $('stl-folder-button').addEventListener('click', () => VaultConnection.choose());
+  $('stl-reveal-local').addEventListener('click', revealLocalFile);
   window.addEventListener('vaultchange', () => {
-    if (dialog.open && current) startLoad();
+    localRequest++; localBusy = false; localStatus = '';
+    updateLocalAction();
+    if (dialog.open && current) { detectLocalService(); startLoad(); }
     else { cancelJob(); clearScene(); }
   });
   $('stl-retry').addEventListener('click', () => startLoad());
@@ -308,6 +372,7 @@
     if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) dialog.close();
   });
   dialog.addEventListener('close', () => {
+    localRequest++; localBusy = false; localStatus = '';
     cancelJob(); clearScene(); modelInfo = null;
     document.body.style.overflow = previousOverflow;
     if (opener && opener.isConnected) opener.focus();

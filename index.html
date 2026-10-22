@@ -225,6 +225,9 @@
     .stl-footer p { font-size: 11px; color: var(--muted); margin: 0; line-height: 1.8; }
     .stl-footer .stl-units { font-size: 10px; margin-top: 4px; }
     .stl-footer .button { min-height: 40px; padding: 11px 16px; font-size: 11px; white-space: nowrap; }
+    .stl-footer-actions { display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
+    .stl-footer-actions [hidden] { display: none; }
+    .stl-footer-actions button:disabled { opacity: .5; cursor: not-allowed; }
     @media (max-width: 760px) {
       .file-card, .group-sub-item { flex-wrap: wrap; }
       .file-card .file-info { flex-basis: calc(100% - 100px); }
@@ -238,7 +241,7 @@
       .stl-message { padding: 18px; gap: 14px; } .stl-cube { font-size: 26px; }
       #stl-status { font-size: 12px; } .stl-pickers { gap: 8px; }
       .stl-meta { padding: 12px 16px 0; font-size: 10px; }
-      .stl-footer { padding: 12px 16px 16px; gap: 12px; align-items: flex-start; }
+      .stl-footer { padding: 12px 16px 16px; gap: 12px; align-items: flex-start; flex-direction: column; }
       .stl-footer p { font-size: 10px; } .stl-footer .stl-units { font-size: 9px; }
     }
     @media (max-height: 560px) { .stl-dialog { max-height: calc(100dvh - 16px); } .stl-stage { min-height: 150px; height: 40vh; } .stl-header { padding-block: 10px; } .stl-footer { padding-block: 10px; } .stl-cube, .stl-footer .stl-units { display: none; } }
