@@ -6,6 +6,10 @@ An unofficial browser-based workspace for USSA VAULT. Find parts, preview local 
 
 面向 USSA VAULT 模块化收纳系统的非官方辅助工具。双击打开网页，选择已经解压的 Vault 资源文件夹，即可使用。无需安装应用、启动服务或上传模型文件。
 
+![Vault 工作台：连接本地文件夹，按宽度、深度和层高查找组件](docs/screenshots/workspace.png)
+
+*连接一次本地 Vault，即可查看资源数量，并按配置查找所需组件。截图中的数量来自演示资源包。*
+
 ## 功能
 
 - **组件查找**：按宽度、深度、层高等配置，查找抽屉、承托收纳盒和选配改造件，查看配件数量与组装提示。
@@ -15,6 +19,20 @@ An unofficial browser-based workspace for USSA VAULT. Find parts, preview local 
 - **资源状态提示**：显示识别数量、缺失文件和路径冲突，支持更换文件夹、重新选择扫描及断开连接。
 - **保存副本**：将已关联的 STL 或 PDF 另存为副本，原文件保持不变。
 - **本地离线使用**：运行资源随项目提供，模型和说明书在本机读取。
+
+## 界面预览
+
+### STL 立体预览
+
+直接读取本地 STL，旋转查看结构、切换视角，并查看模型尺寸和三角面数量。
+
+![S3 抽屉模块的 3D 预览，包含视角切换、尺寸、三角面数量及保存副本操作](docs/screenshots/stl-preview.png)
+
+### 说明书自动回退英文
+
+中文界面下，如果本地只有英文说明书，会自动展示英文版，并给出明确提示。
+
+![中文界面中提示“本地未找到中文版，已显示英文版”，并展示本地英文 PDF](docs/screenshots/manual-fallback.png)
 
 ## 快速开始
 
@@ -138,6 +156,8 @@ node --test tests/*.test.cjs
 ## 发布仓库
 
 网页运行所需文件为 `index.html` 和完整的 `assets/`。开发仓库还可以包含 `scripts/`、`tests/` 和文档。
+
+README 的界面截图位于 `docs/screenshots/`，上传仓库时请一并保留，以便 GitHub 正常显示配图。
 
 原始 STL、PDF 和三个组件资源目录由使用者在本地准备，不需要随网页代码上传至 GitHub。仅下载网页代码的使用者，也不需要获取资源包就能运行上面的核心测试。
 
