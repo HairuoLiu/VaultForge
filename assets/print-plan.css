@@ -1,0 +1,30 @@
+input { font: inherit; }
+input:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.plan-form, .plan-entry { padding: 20px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); margin: 24px 0; }
+.plan-fields { display: grid; grid-template-columns: minmax(180px, 2fr) minmax(120px, 1fr) minmax(150px, 1fr); gap: 18px; align-items: end; }
+.plan-form .plan-fields { grid-template-columns: minmax(180px, 2fr) minmax(120px, 1fr); }
+.plan-fields input, .plan-layout input { width: 100%; min-height: 44px; padding: 11px 14px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 5px; font-size: 13px; }
+.plan-fields select { background: var(--white); }
+.plan-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+.plan-actions button, #plan-export { padding: 11px 16px; min-height: 44px; border: 1px solid var(--line); border-radius: 5px; background: var(--white); color: var(--ink); font: inherit; font-size: 12px; }
+.plan-actions .primary { background: var(--ink); color: var(--white); }
+.plan-actions a { font-size: 12px; text-underline-offset: 4px; }
+.plan-actions button:hover, #plan-export:hover:enabled { border-color: var(--ink); }
+#plan-export:disabled { opacity: .5; cursor: default; }
+.plan-entry { list-style: none; background: var(--white); margin: 0 0 18px; }
+#plan-entries { padding: 0; }
+.plan-description { margin: 0 0 20px; font-size: 13px; line-height: 1.8; overflow-wrap: anywhere; }
+.plan-layout { min-width: 0; border: 1px solid var(--line); border-radius: 4px; margin: 22px 0 0; padding: 14px; }
+.plan-layout legend { font-size: 12px; }
+.plan-layout-row { display: grid; grid-template-columns: minmax(0, 1fr) 130px; align-items: center; gap: 16px; margin-top: 14px; }
+.plan-layout-row label { margin: 0; overflow-wrap: anywhere; line-height: 1.7; }
+.plan-heading { display: flex; gap: 16px; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+.plan-heading h3 { margin: 0; font-size: 22px; font-weight: 550; }
+#workspace-save-status[data-warning="true"], #plan-unresolved { color: #98401e; }
+#plan-add-status:empty { display: none; }
+@media (max-width: 760px) {
+  .nav-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .plan-fields, .plan-form .plan-fields { grid-template-columns: 1fr; }
+  .plan-form, .plan-entry { padding: 16px; }
+  .plan-layout-row { grid-template-columns: minmax(0, 1fr) 100px; gap: 10px; }
+}

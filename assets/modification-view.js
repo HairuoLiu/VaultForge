@@ -58,8 +58,17 @@
     LocalFiles.decorate(container);
     if (window.ScrollTrigger) ScrollTrigger.refresh();
   }
-  ['category', ...dimensions].forEach(key => $('mod-' + key).addEventListener('change', refresh));
+  ['category', ...dimensions].forEach(key => $('mod-' + key).addEventListener('change', () => { refresh(); window.dispatchEvent(new Event('modificationchange')); }));
   window.ModificationView = {
+    selection,
+    restore(value) {
+      // Restore dependent filters in order so each option exists before selection.
+      for (const key of ['category', ...dimensions]) {
+        const input = $('mod-' + key);
+        input.value = [...input.options].some(option => option.value === value[key]) ? value[key] : 'all';
+        refresh();
+      }
+    },
     setLanguage(value) {
       language = value === 'zh' ? 'zh' : 'en';
       const t = catalog.text[language];
