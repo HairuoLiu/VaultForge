@@ -2,6 +2,7 @@
 """Serve the local project so previews can read the selected STL directly."""
 
 import argparse
+import errno
 import json
 import os
 import subprocess
@@ -99,14 +100,23 @@ class PreviewHandler(SimpleHTTPRequestHandler):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--no-browser', action='store_true')
+    parser.add_argument('--port', type=int, default=8765, help='Local port (default: 8765; use 0 for a temporary test port)')
     parser.add_argument('--resource-root', default=os.environ.get('VAULT_RESOURCE_ROOT'), help='Path to the extracted Vault resource folder')
     args = parser.parse_args()
+    if not 0 <= args.port <= 65535:
+        parser.error('--port must be between 0 and 65535.')
     root = Path(__file__).resolve().parent.parent
     resource_root = find_resource_root(root, args.resource_root)
     if args.resource_root and resource_root is None:
         parser.error('No Vault resource folders found at --resource-root / VAULT_RESOURCE_ROOT.')
     handler = partial(PreviewHandler, directory=str(root))
-    with ThreadingHTTPServer(('127.0.0.1', 0), handler) as server:
+    try:
+        server = ThreadingHTTPServer(('127.0.0.1', args.port), handler)
+    except OSError as error:
+        if error.errno == errno.EADDRINUSE:
+            parser.exit(1, f'端口 {args.port} 已被占用。请关闭已启动的预览服务，或使用 --port 指定其他固定端口后重试。\n')
+        parser.exit(1, f'无法启动本地预览服务：{error}\n')
+    with server:
         server.resource_root = resource_root
         url = f'http://127.0.0.1:{server.server_port}/index.html'
         print(f'VAULT 预览已启动：{url}', flush=True)

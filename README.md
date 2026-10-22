@@ -22,7 +22,7 @@ My Vault/
 └── 说明书 PDF
 ```
 
-**刷新后需重新选择资源文件夹。** 浏览器存储可用时，语言、配置和打印清单会自动保留；资源更新后需重新选择扫描。
+**支持目录访问的浏览器会记住文件夹，刷新后自动恢复。** 若浏览器要求重新授权，点击「重新连接」即可；不支持此能力或存储不可用时，仍需重新选择。资源更新后点击「重新扫描」，主动断开会清除目录记忆。语言、配置和打印清单也会在浏览器存储可用时自动保留。
 
 ## 核心功能
 
@@ -48,6 +48,8 @@ My Vault/
 
 通过 `启动预览.command`（macOS）或 `启动预览.bat`（Windows）启动时，3D 预览中会显示「定位到文件」，在 Finder / 文件资源管理器中选中原始 STL。需要安装 Python 3；资源包放在项目目录或其上一级。其他位置可用 `python3 scripts/preview-server.py --resource-root "/你的/Vault目录"` 指定，并在页面选择同一资源文件夹。直接双击网页时不显示该按钮。
 
+脚本默认使用固定地址 `http://127.0.0.1:8765/index.html`，重启后仍可访问同一份浏览器记录。端口被占用时可通过 `--port` 指定其他固定端口。旧版随机地址下的清单不会自动迁移；可用 `--port 原端口` 回到旧地址查看或导出。
+
 请一次选择一份资源包。缺失或冲突的文件会显示提示；「保存副本」不会覆盖原文件。五金数量为说明书参考值，组装前请核对实际安装需求。
 
 ## 开发与测试
@@ -60,7 +62,7 @@ node --test tests/*.test.cjs
 
 测试自动查找当前目录或上一级的资源包，也可通过 `VAULT_RESOURCE_ROOT` 指定路径。未提供资源包时，跳过三个真实资源校验用例。
 
-目录生成与预览服务测试：`python3 -m unittest discover -s tests -p 'test_*.py'`。已安装 agent-browser 时，可运行 `node tests/workspace.browser.cjs /path/to/agent-browser` 检查清单编辑和刷新恢复；该测试使用独立临时浏览器配置。
+目录生成与预览服务测试：`python3 -m unittest discover -s tests -p 'test_*.py'`。已安装 agent-browser 时，可运行 `node tests/workspace.browser.cjs /path/to/agent-browser` 检查清单编辑，运行 `node tests/folder-restore.browser.cjs /path/to/agent-browser` 检查目录刷新恢复；测试使用独立临时浏览器配置。
 
 修改 `assets/stl-worker.js` 后，按 [构建脚本](scripts/build-stl-vendor.cjs) 中的说明重新打包预览引擎。
 

@@ -22,7 +22,7 @@ My Vault/
 └── Manual PDFs
 ```
 
-**Select the resource folder again after refreshing.** Language, configurations, and your print plan are saved when browser storage is available. Reselect the folder to scan updated resources.
+**Browsers with directory access support remember the folder and restore it after refreshing.** If access needs approval again, click **Reconnect folder**. Browsers without this capability or available storage still require a new selection. Use **Rescan folder** after resource updates; disconnecting forgets the folder. Language, configurations, and your print plan are also saved when browser storage is available.
 
 ## Features
 
@@ -48,6 +48,8 @@ Local-file mode has been verified in desktop Chrome; other browsers have not rec
 
 When launched with `启动预览.command` (macOS) or `启动预览.bat` (Windows), the 3D preview includes **Show in folder**, which selects the original STL in Finder / File Explorer. Python 3 is required. Place the resource pack in the project directory or its parent, or run `python3 scripts/preview-server.py --resource-root "/path/to/Vault"` and select that same folder on the page. This button is hidden when opening the HTML file directly.
 
+The launcher uses the stable address `http://127.0.0.1:8765/index.html`, keeping browser records accessible across restarts. If the port is occupied, set another fixed port with `--port`. Plans saved at older random-port addresses are not migrated automatically; use `--port ORIGINAL_PORT` to revisit and export them.
+
 Select one resource pack at a time. Missing or conflicting files are flagged. Saving a copy does not overwrite the original. Hardware quantities follow manual references; check your actual installation requirements before assembly.
 
 ## Development and tests
@@ -60,7 +62,7 @@ node --test tests/*.test.cjs
 
 Tests locate the resource pack in the current or parent directory. Set `VAULT_RESOURCE_ROOT` to use another location. Without a resource pack, the three archive validation tests are skipped.
 
-Catalog builder and preview server tests: `python3 -m unittest discover -s tests -p 'test_*.py'`. With agent-browser installed, run `node tests/workspace.browser.cjs /path/to/agent-browser` to check plan editing and reload recovery in an isolated temporary browser profile.
+Catalog builder and preview server tests: `python3 -m unittest discover -s tests -p 'test_*.py'`. With agent-browser installed, run `node tests/workspace.browser.cjs /path/to/agent-browser` to check plan editing, or `node tests/folder-restore.browser.cjs /path/to/agent-browser` to check folder recovery after reload. Both use isolated temporary browser profiles.
 
 After changing `assets/stl-worker.js`, rebuild the preview engine using the instructions in the [build script](scripts/build-stl-vendor.cjs).
 

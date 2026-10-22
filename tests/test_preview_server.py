@@ -1,4 +1,6 @@
 import importlib.util
+import errno
+import io
 import json
 from functools import partial
 from http.client import HTTPConnection
@@ -12,6 +14,33 @@ from unittest.mock import patch
 spec = importlib.util.spec_from_file_location('preview_server', Path(__file__).resolve().parents[1] / 'scripts/preview-server.py')
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
+
+
+class LauncherTests(unittest.TestCase):
+    @patch.object(module, 'ThreadingHTTPServer')
+    @patch('builtins.print')
+    def test_restarts_use_the_same_nonzero_default_port(self, output, factory):
+        with patch.object(module.sys, 'argv', ['preview-server.py', '--no-browser']):
+            module.main()
+            module.main()
+        addresses = [call.args[0] for call in factory.call_args_list]
+        self.assertEqual(addresses, [('127.0.0.1', 8765)] * 2)
+
+    @patch.object(module, 'ThreadingHTTPServer')
+    @patch('builtins.print')
+    def test_explicit_port_can_revisit_an_existing_browser_origin(self, output, factory):
+        with patch.object(module.sys, 'argv', ['preview-server.py', '--no-browser', '--port', '54321']):
+            module.main()
+        self.assertEqual(factory.call_args.args[0], ('127.0.0.1', 54321))
+
+    @patch.object(module, 'ThreadingHTTPServer', side_effect=OSError(errno.EADDRINUSE, 'Address in use'))
+    def test_port_conflict_does_not_silently_change_browser_origin(self, factory):
+        with patch.object(module.sys, 'argv', ['preview-server.py', '--no-browser']), patch.object(module.sys, 'stderr', new_callable=io.StringIO) as output:
+            with self.assertRaises(SystemExit) as raised:
+                module.main()
+        self.assertEqual(raised.exception.code, 1)
+        self.assertIn('--port', output.getvalue())
+        self.assertEqual(factory.call_count, 1)
 
 
 class RevealTests(unittest.TestCase):

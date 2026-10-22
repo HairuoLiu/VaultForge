@@ -317,7 +317,7 @@ You supply the printer, filament and hardware.</p>
     <div class="workspace-heading"><div><h2 id="ui-title">Your build workspace.</h2><p data-copy="workspaceDescription">Choose your dimensions. We'll find the parts that fit.</p></div><span class="workspace-indicator" data-copy="workspaceIndicator">Ready for your next build</span></div>
     <section class="vault-connection" id="vault-connection" aria-labelledby="vault-title" data-connected="false">
       <div class="vault-connection-top"><div><h3 id="vault-title">Connect your local Vault</h3><p id="vault-help"></p></div><div class="vault-summary" role="status" aria-live="polite"><strong id="vault-name">No folder connected</strong><p id="vault-counts"></p></div></div>
-      <div class="vault-actions"><button type="button" id="vault-choose">Choose Vault folder</button><button type="button" id="vault-rescan" hidden>Select folder again</button><button type="button" id="vault-disconnect" hidden>Disconnect</button></div>
+      <div class="vault-actions"><button type="button" id="vault-choose">Choose Vault folder</button><button type="button" id="vault-rescan" hidden>Rescan folder</button><button type="button" id="vault-disconnect" hidden>Disconnect</button></div>
       <p id="vault-notice" role="status" aria-live="polite" hidden></p>
       <input id="vault-folder-input" type="file" webkitdirectory multiple hidden aria-label="Choose Vault folder">
     </section>
@@ -486,6 +486,7 @@ You supply the printer, filament and hardware.</p>
 <script src="assets/build-plan.js"></script>
 <script src="assets/workspace-state.js"></script>
 <script src="assets/vault-resources.js"></script>
+<script src="assets/vault-folder.js"></script>
 <script src="assets/vault-connection.js"></script>
 <script src="assets/local-files.js"></script>
 <script src="assets/stl-preview.js"></script>
@@ -749,7 +750,7 @@ function loadPdf(manualId, page = null) {
   }
   let message = '';
   if (!VaultResources.connected) message = zh ? '请先在上方选择 Vault 文件夹，即可阅读本地说明书。' : 'Choose your Vault folder above to read its manuals.';
-  else if (!manual) message = zh ? '所选文件夹中未找到此说明书的中文或英文版本。补充文件后，请重新选择扫描。' : 'Neither language version of this manual was found. Add the file, then select the folder again.';
+  else if (!manual) message = zh ? '所选文件夹中未找到此说明书的中文或英文版本。补充文件后，请重新扫描资源文件夹。' : 'Neither language version of this manual was found. Add the file, then rescan the resource folder.';
   else if (manual.fallback) message = zh ? '本地未找到中文版，已显示英文版。' : 'No English copy was found. Showing the Chinese version.';
   if (manual?.fallback && page) message += zh ? ' 跨语言页码尚未核对，已打开首页。' : ' Page numbers have not been matched across languages; opened at page one.';
   status.textContent = message;
