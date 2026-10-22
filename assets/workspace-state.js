@@ -18,7 +18,11 @@
       const input = source.modifications?.[field];
       modifications[field] = typeof input === 'string' && input.length <= 30 ? input : 'all';
     }
-    return { version: 1, language: source.language === 'zh' ? 'zh' : 'en', system: source.system === 'sustainers' ? 'sustainers' : 'drawers', tab: ['finder', 'modifications', 'manuals', 'plan'].includes(source.tab) ? source.tab : 'finder', manual: /^0[1-5]$/.test(source.manual) ? source.manual : '01', manualPage: Number.isInteger(source.manualPage) && source.manualPage > 0 && source.manualPage < 10000 ? source.manualPage : null, configurations, modifications, builds };
+    const inputModels = source.models || {};
+    const models = { query: typeof inputModels.query === 'string' ? inputModels.query.slice(0, 160) : '', page: Number.isInteger(inputModels.page) && inputModels.page > 0 ? Math.min(inputModels.page, 10000) : 1 };
+    for (const [field, choices] of Object.entries({ system: ['all', 'drawers', 'sustainers', 'modifications', 'other'], width: ['all', 'S', 'M', 'L', 'XL'], depth: ['all', '3', '4', '5', '6', '7'], height: ['all', '1F', '2F', '4F'] })) models[field] = choices.includes(inputModels[field]) ? inputModels[field] : 'all';
+    models.type = typeof inputModels.type === 'string' && /^[a-z]{1,30}$/.test(inputModels.type) ? inputModels.type : 'all';
+    return { version: 1, language: source.language === 'zh' ? 'zh' : 'en', system: source.system === 'sustainers' ? 'sustainers' : 'drawers', tab: ['finder', 'models', 'modifications', 'manuals', 'plan'].includes(source.tab) ? source.tab : 'finder', manual: /^0[1-5]$/.test(source.manual) ? source.manual : '01', manualPage: Number.isInteger(source.manualPage) && source.manualPage > 0 && source.manualPage < 10000 ? source.manualPage : null, configurations, modifications, models, builds };
   }
   function createStore(getStorage) {
     let available = true;

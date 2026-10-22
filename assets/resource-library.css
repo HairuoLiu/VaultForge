@@ -1,4 +1,4 @@
-.workspace-sections { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 24px; }
+.workspace-sections { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-flow: dense; gap: 12px; margin: 0 0 24px; }
 .workspace-sections > button { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 20px; min-height: 92px; text-align: left; border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 6px; background: var(--white); color: var(--ink); }
 .workspace-sections > button strong { font-size: 17px; font-weight: 600; }
 .workspace-sections > button > span { font-size: 12px; line-height: 1.5; color: var(--muted); }
@@ -64,7 +64,7 @@
   #manual-catalog { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
-  .workspace-sections { gap: 6px; margin-bottom: 18px; }
+  .workspace-sections { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-bottom: 18px; }
   .workspace-sections > button { padding: 12px 8px; min-height: 65px; align-items: center; justify-content: center; }
   .workspace-sections > button strong { font-size: 12px; }
   .workspace-sections > button > span { display: none; }

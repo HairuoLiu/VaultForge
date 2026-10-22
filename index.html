@@ -259,6 +259,7 @@
   <link rel="stylesheet" href="assets/workbench-flow.css">
   <link rel="stylesheet" href="assets/resource-library.css">
   <link rel="stylesheet" href="assets/modification-library.css">
+  <link rel="stylesheet" href="assets/model-library.css">
 </head>
 <body>
 
@@ -283,6 +284,7 @@ and prepare your first build.</p>
     <div class="workspace-heading"><div><h2 id="ui-title">Your build workspace.</h2><p data-copy="workspaceDescription">Choose your dimensions. We'll find the parts that fit.</p></div><span class="workspace-indicator" data-copy="workspaceIndicator">Ready for your next build</span></div>
     <nav class="workspace-sections" aria-label="Workspace sections" id="workspace-sections">
       <button type="button" data-workspace-section="build" onclick="openWorkspace('finder')"><strong data-library-copy="buildTitle"></strong><span data-library-copy="buildHint"></span></button>
+      <button type="button" class="tab-btn" id="tab-btn-models" data-workspace-section="models" onclick="openWorkspace('models')"><strong data-library-copy="modelsTitle"></strong><span data-library-copy="modelsHint"></span></button>
       <button type="button" class="tab-btn" id="tab-btn-modifications" data-workspace-section="modifications" onclick="openWorkspace('modifications')"><strong data-library-copy="modsTitle"></strong><span data-library-copy="modsHint"></span></button>
       <button type="button" class="tab-btn" id="tab-btn-manuals" data-workspace-section="manuals" onclick="openWorkspace('manuals')"><strong data-library-copy="manualsTitle"></strong><span data-library-copy="manualsHint"></span></button>
     </nav>
@@ -355,6 +357,35 @@ and prepare your first build.</p>
       </details>
     </section>
   </div>
+
+  <section id="tab-models" class="tab-content" aria-labelledby="model-title">
+    <div class="model-intro">
+      <h3 id="model-title" data-model-copy="title"></h3>
+      <p data-model-copy="intro"></p>
+      <form id="model-search" role="search">
+        <label for="model-query" class="model-sr-only" data-model-copy="searchLabel"></label>
+        <div class="model-search-field"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" id="model-query" maxlength="160" autocomplete="off" spellcheck="false" aria-describedby="model-search-hint"><button type="submit" class="button primary" data-model-copy="search"></button></div>
+      </form>
+      <div id="model-search-hint" class="model-examples"><span data-model-copy="try"></span><button type="button" data-model-example="runner"></button><button type="button" data-model-example="handle"></button><button type="button" data-model-example="divider"></button></div>
+    </div>
+    <div class="model-toolbar">
+      <div id="model-systems" class="model-systems" role="group">
+        <button type="button" data-model-system="all" aria-pressed="true"></button><button type="button" data-model-system="drawers" aria-pressed="false"></button><button type="button" data-model-system="sustainers" aria-pressed="false"></button><button type="button" data-model-system="modifications" aria-pressed="false"></button><button type="button" data-model-system="other" aria-pressed="false" hidden></button>
+      </div>
+      <details id="model-more"><summary data-model-copy="more"></summary><div class="model-filter-grid">
+        <div><label for="model-type" data-model-copy="type"></label><select id="model-type"></select></div>
+        <div><label for="model-width" data-model-copy="width"></label><select id="model-width"></select></div>
+        <div><label for="model-depth" data-model-copy="depth"></label><select id="model-depth"></select></div>
+        <div><label for="model-height" data-model-copy="height"></label><select id="model-height"></select></div>
+      </div><p class="source-note" data-model-copy="sizeHint"></p></details>
+    </div>
+    <div class="model-resultbar"><p id="model-result-count" role="status" aria-live="polite" aria-atomic="true"></p><button type="button" id="model-reset" class="flow-text-button" data-model-copy="reset" hidden></button></div>
+    <p id="model-source-note" class="source-note"></p>
+    <p id="model-conflicts" class="model-conflicts" role="status" hidden></p>
+    <div id="model-empty" class="model-empty"><h4 id="model-empty-title"></h4><p id="model-empty-hint"></p><button type="button" id="model-connect" class="button primary" data-model-copy="connect"></button></div>
+    <ul id="model-results" class="item-list" aria-labelledby="model-title"></ul>
+    <nav id="model-pagination" class="model-pagination" hidden><button type="button" id="model-prev" data-model-copy="prev"></button><span id="model-page"></span><button type="button" id="model-next" data-model-copy="next"></button></nav>
+  </section>
 
   <div id="tab-modifications" class="tab-content">
     <h3 id="mod-overview-title" tabindex="-1"></h3>
@@ -446,15 +477,18 @@ and prepare your first build.</p>
 <script src="assets/vault-folder.js"></script>
 <script src="assets/vault-connection.js"></script>
 <script src="assets/local-files.js"></script>
+<script src="assets/local-file-service.js"></script>
 <script src="assets/stl-preview.js"></script>
 <script src="assets/modification-files.js"></script>
 <script src="assets/modifications.js"></script>
+<script src="assets/model-index.js"></script>
 <script src="assets/modification-view.js"></script>
 <script src="assets/print-plan-view.js"></script>
 <script src="assets/assembly-reference.js"></script>
 <script src="assets/file-details.js"></script>
 <script src="assets/workbench-flow.js"></script>
 <script src="assets/resource-library.js"></script>
+<script src="assets/model-library.js"></script>
 <script src="assets/vendor/gsap.min.js"></script>
 <script src="assets/vendor/ScrollTrigger.min.js"></script>
 <script>
@@ -469,7 +503,7 @@ const savedConfigurations = { ...workspaceStore.value.configurations };
 
 function saveWorkspace() {
   if (restoringWorkspace) return;
-  workspaceStore.save({ language: currentLang, system: currentSystem, tab: currentTab, manual: currentManual, manualPage: currentManualPage, configurations: savedConfigurations, modifications: ModificationView.selection() });
+  workspaceStore.save({ language: currentLang, system: currentSystem, tab: currentTab, manual: currentManual, manualPage: currentManualPage, configurations: savedConfigurations, modifications: ModificationView.selection(), models: ModelLibrary.selection() });
   PrintPlanView.storageNotice();
 }
 
@@ -632,6 +666,7 @@ function updateStaticText() {
   if (window.LocalFiles) LocalFiles.setLanguage(currentLang);
   if (window.VaultConnection) VaultConnection.setLanguage(currentLang);
   if (window.ModificationView) ModificationView.setLanguage(currentLang);
+  if (window.ModelLibrary) ModelLibrary.setLanguage(currentLang);
   PrintPlanView.setLanguage(currentLang);
   document.getElementById('ui-title').textContent = t.title;
   document.getElementById('lang-toggle').textContent = t.langToggle;
@@ -665,6 +700,7 @@ function switchTab(tabName, btn) {
   saveWorkspace();
   updateAssemblyReference();
   WorkbenchFlow.update();
+  ModelLibrary.activate(tabName === 'models');
   if (window.ScrollTrigger) ScrollTrigger.refresh();
 }
 
@@ -981,6 +1017,7 @@ function renderSustainerList() {
 }
 
 function updateAssemblyReference() {
+  document.getElementById('assembly').hidden = currentTab === 'models';
   AssemblyReference.update({ system: currentTab === 'modifications' ? 'modifications' : currentSystem, configuration: readConfiguration(), language: currentLang });
 }
 
@@ -1014,6 +1051,7 @@ WorkbenchFlow.init({
 });
 
 // Initial setup
+ModelLibrary.init({ language: currentLang, selection: workspaceStore.value.models, onChange: saveWorkspace });
 updateStaticText();
 restoreConfiguration(currentSystem, savedConfigurations[currentSystem]);
 ModificationView.restore(workspaceStore.value.modifications);

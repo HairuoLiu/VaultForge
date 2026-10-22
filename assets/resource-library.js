@@ -4,6 +4,7 @@
   const copy = {
     zh: {
       sections: '工作台功能', buildTitle: '打印配置', buildHint: '选尺寸，核对零件和五金',
+      modelsTitle: '全部模型', modelsHint: '中英文搜索，快速找到文件',
       modsTitle: '选配改造件', modsHint: '底座、轮组、提手与壁挂',
       manualsTitle: '组装说明书', manualsHint: '从基础入门到组装安装',
       manualsIntro: '第一次组装，先看使用说明，再按模块选择对应指南。',
@@ -18,6 +19,7 @@
     },
     en: {
       sections: 'Workspace sections', buildTitle: 'Configure a build', buildHint: 'Sizes, printed parts and hardware',
+      modelsTitle: 'All models', modelsHint: 'Search by name, size or purpose',
       modsTitle: 'Modifications', modsHint: 'Bases, wheels, handles and mounts',
       manualsTitle: 'Assembly manuals', manualsHint: 'Getting started, assembly and mounting',
       manualsIntro: 'Start with the instructions, then choose the guide for your module.',

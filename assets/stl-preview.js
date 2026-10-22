@@ -89,14 +89,10 @@
     const request = ++localRequest;
     localAvailable = false; localBusy = false; localStatus = '';
     updateLocalAction();
-    if (location.protocol !== 'http:' || location.hostname !== '127.0.0.1') return;
-    try {
-      const response = await fetch('/__vault/capabilities', { cache: 'no-store', signal: AbortSignal.timeout(3000) });
-      const info = response.ok ? await response.json() : null;
-      if (request !== localRequest) return;
-      localAvailable = info?.service === 'vault-workbench' && info.revealLocal === true;
-      updateLocalAction();
-    } catch (_) { /* Ordinary static servers do not offer native file actions. */ }
+    const available = await window.LocalFileService?.available({ refresh: true });
+    if (request !== localRequest) return;
+    localAvailable = available === true;
+    updateLocalAction();
   }
 
   async function revealLocalFile() {
@@ -106,14 +102,9 @@
     localBusy = true; localStatus = '';
     updateLocalAction();
     try {
-      const response = await fetch('/__vault/reveal', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: current.path, size: file.size, lastModified: file.lastModified }),
-        signal: AbortSignal.timeout(8000)
-      });
-      const result = await response.json();
+      const result = await window.LocalFileService.reveal(current.path);
       if (request !== localRequest) return;
-      localStatus = response.ok && result.ok ? 'revealedLocal' :
+      localStatus = result.ok ? 'revealedLocal' : result.error === 'unavailable' ? 'localUnavailable' :
         ['resource_root', 'missing', 'mismatch'].includes(result.error) ? 'localMismatch' : 'localFailed';
     } catch (_) {
       if (request === localRequest) localStatus = 'localUnavailable';

@@ -61,7 +61,7 @@ try {
   run('wait', '--fn', '!!window.ResourceLibrary && !!window.WorkbenchFlow');
   evaluate('VaultConnection.ready');
   requireCondition('!VaultResources.connected && workspaceStore.value.builds.length === 0', 'The test profile must begin without personal resources or builds');
-  requireCondition('document.querySelectorAll("#workspace-sections > button").length === 3 && [...document.querySelectorAll("#workspace-sections > button")].every(button => button.checkVisibility() && button.querySelector("strong").textContent.trim())', 'The three workspace entry points must be visible and labelled');
+  requireCondition('document.querySelectorAll("#workspace-sections > button").length === 4 && [...document.querySelectorAll("#workspace-sections > button")].every(button => button.checkVisibility() && button.querySelector("strong").textContent.trim())', 'The four workspace entry points must be visible and labelled');
   click('[data-workspace-section="modifications"]');
   requireCondition('currentTab === "modifications" && document.getElementById("mod-category-cards").checkVisibility()', 'The modification entry does not open its visible purpose categories');
   click('[data-workspace-section="manuals"]');
@@ -76,7 +76,7 @@ try {
   `);
   click('#mbtn-05');
   requireCondition('currentManual === "05" && document.getElementById("manual-status").checkVisibility() && !document.getElementById("manual-open").hasAttribute("href")', 'Selecting an unavailable manual must retain useful disconnected feedback');
-  console.log('PASS: three entry points and five purpose cards work before connecting resources');
+  console.log('PASS: four entry points and five purpose cards work before connecting resources');
 
   click('[data-workspace-section="build"]');
   click('#flow-browse');

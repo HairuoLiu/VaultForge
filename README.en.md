@@ -15,6 +15,8 @@ Plain HTML / CSS / JavaScript, with no frontend dependencies to install. STL fil
 3. Click **Choose Vault folder** and select the root of your extracted resource pack.
 4. Follow **Folder → Configure → Review parts → Print plan**. You can browse sizes without a resource pack.
 
+Looking for a specific file? After connecting your folder, open **All models** and search for `S3 runner`, `handle`, or `L6 隔板` to preview a model, copy its path, or save a copy. Chinese and English terms can be mixed regardless of the interface language.
+
 Example resource folder (keep the original folder names and filenames):
 
 ```text
@@ -28,7 +30,7 @@ My Vault/
 
 ### Launch with a local server
 
-To **show the original file in its folder** from the 3D preview, install Python 3.8+ and run the appropriate launcher:
+To **show the original file in its folder** from All models or the 3D preview, install Python 3.8+ and run the appropriate launcher:
 
 | Platform | Launch |
 | --- | --- |
@@ -49,6 +51,7 @@ python3 scripts/preview-server.py --resource-root "/path/to/Vault"
 | Feature | What it does |
 | --- | --- |
 | Guided configuration | Choose a drawer or case, then set its size, roof, interior, and applicable optional parts |
+| All models | Index every STL in your actual folder; use bilingual fuzzy search, purpose and size filters, pagination, path copying, and individual previews |
 | Grouped parts review | Group required files by body, mechanism, roof, and interior, expanded by default; show file counts, print quantities, and notes |
 | Hardware and assembly | Show specifications, quantities per module, uses, and manual pages; selecting the Grid roof handle also adds two M6 × 50 mm bolts |
 | 3D preview | Rotate, zoom, inspect model dimensions, and save copies; the local server also supports locating the original file |
@@ -59,6 +62,8 @@ python3 scripts/preview-server.py --resource-root "/path/to/Vault"
 ## Screenshots
 
 These screenshots show the current Chinese interface. Click an image to view it at full size.
+
+![All models: bilingual search, system filters, and individual file actions](assets/screenshots/model-library.png)
 
 | Grouped parts and hardware | Local STL preview |
 | --- | --- |
@@ -77,6 +82,7 @@ These screenshots show the current Chinese interface. Click an image to view it 
 
 ## Usage notes
 
+- **Search scope:** All models follows the actual folder, including new or unclassified STL files. Full paths distinguish files with identical names. Size filters use known compatibility; search by name or path for files without confirmed sizes. Searches and filters are saved with the workspace. Rescan after changing files.
 - **Counting quantities:** File counts and print quantities are shown separately. `×2` means two copies of the STL; parts already paired inside a file are not doubled. Enter layout-dependent quantities such as dividers manually, using `0` for unused parts. Complete these quantities before exporting.
 - **Adding optional parts:** **Use this option** updates the current configuration. Click **Add to print plan** afterward to save it. Browsing accessories does not add them, and changing the current configuration does not overwrite saved builds.
 - **Hardware scope:** Drawer and case hardware totals scale with the number of modules. Modification hardware is listed separately per wheel, foot, or other assembly. Unspecified installation quantities remain marked for review, with reminders in the relevant build and CSV export.
@@ -111,7 +117,7 @@ After installing `agent-browser`, run browser regressions with an isolated tempo
 node tests/assembly-readiness.browser.cjs /path/to/agent-browser
 ```
 
-See [tests/](tests/) for other scenarios: configuration guidance, accessories, manuals, plan editing, and folder restoration. Resource validation checks the current directory and its parent, or the path set with `VAULT_RESOURCE_ROOT`. These checks are skipped when no resource pack is available.
+See [tests/](tests/) for other scenarios: model search, configuration guidance, accessories, manuals, plan editing, and folder restoration. Resource validation checks the current directory and its parent, or the path set with `VAULT_RESOURCE_ROOT`. These checks are skipped when no resource pack is available.
 
 After changing `assets/stl-worker.js`, rebuild the preview engine as described in the [build script](scripts/build-stl-vendor.cjs). When reporting an issue, include your browser, how you opened the app, the selected configuration, and steps to reproduce it.
 
