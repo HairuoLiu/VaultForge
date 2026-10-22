@@ -14,9 +14,9 @@
       invalid: 'Use whole numbers: 1–999 modules, 0–999 copies per module.', limit: 'A plan can contain up to 200 named builds.', added: 'Added to your print plan.',
       hardwareNote: 'Hardware totals follow the catalog’s manual references. Check mounting holes and any extra hardware needed for your installation.',
       keyLabel: 'Key style', roofLabel: 'Drawer roof · one per module', standard: 'Standard key', hidden: 'Hidden key · 2 files', none: 'No roof · lower tiers',
-      grid: 'Grid roof', table: 'Table roof', bowl: 'Bowl roof', mount: 'Under-table mount roof', heavyweight: 'Heavyweight roof',
+      grid: 'Grid roof', table: 'Table roof', bowl: 'Bowl roof', mount: 'Under-table mount roof', heavyweight: 'Heavyweight roof', topHandle: 'Top handle + 2 bolts',
       drawers: 'Drawers', sustainers: 'Sustainers', emptyInterior: 'Empty', gridfinity: 'Gridfinity', dividers: 'Dividers', sealed: 'Sealed dividers', whole: 'Whole lid', split: 'Split lid',
-      zero: 'No STL copies required.', total: (builds, count) => `${builds} builds · ${count} modules`, saved: 'Settings and your print plan are saved in this browser when storage is available. Select your Vault folder again after reopening.'
+      zero: 'No STL copies required.', total: (builds, count) => `${builds} builds · ${count} modules`, saved: 'Settings and your print plan are saved in this browser when storage is available. Folder access follows the connection status above.'
     },
     zh: {
       tab: '打印清单', title: '你的打印清单', intro: '合并多种配置的 STL 和五金数量。汇总包含全部方案，包括已完成的方案；进度状态适用于整批模块。',
@@ -29,9 +29,9 @@
       invalid: '请填写整数：模块数量 1–999，每模块打印份数 0–999。', limit: '一份清单最多保存 200 个方案。', added: '已加入打印清单。',
       hardwareNote: '五金数量沿用目录中的说明书参考值；组装前请核对实际孔位，以及安装方式所需的额外五金。',
       keyLabel: '锁匙方案', roofLabel: '抽屉顶盖 · 每模块一个', standard: '标准锁匙', hidden: '隐藏锁匙 · 两个文件', none: '不需要顶盖 · 非顶层',
-      grid: 'Gridfinity 网格顶盖', table: '平整桌面顶盖', bowl: '内凹托盘顶盖', mount: '桌底吊装顶盖', heavyweight: '重型提手顶盖',
+      grid: 'Gridfinity 网格顶盖', table: '平整桌面顶盖', bowl: '内凹托盘顶盖', mount: '桌底吊装顶盖', heavyweight: '重型提手顶盖', topHandle: '顶部提手 + 2 颗螺丝',
       drawers: '抽屉', sustainers: '承托收纳盒', emptyInterior: '空盒', gridfinity: 'Gridfinity 底板', dividers: '分隔板', sealed: '密封分隔板', whole: '整块翻盖', split: '分体翻盖',
-      zero: '无需打印 STL。', total: (builds, count) => `${builds} 个方案 · ${count} 个模块`, saved: '浏览器存储可用时，自动保存设置与打印清单。重新打开后，仍需选择 Vault 文件夹。'
+      zero: '无需打印 STL。', total: (builds, count) => `${builds} 个方案 · ${count} 个模块`, saved: '浏览器存储可用时，自动保存设置与打印清单；目录是否可用请查看上方连接状态。'
     }
   };
   let language = 'en';
@@ -40,6 +40,8 @@
   function description(build) {
     const c = build.configuration;
     const choices = build.system === 'drawers' ? [t()[c.key], t()[c.drawerRoof]] : [t()[c.interior === 'empty' ? 'emptyInterior' : c.interior], t()[c.roof]];
+    if (build.system === 'drawers' && c.topHandle) choices.push(t().topHandle);
+    if (build.system === 'drawers' && c.gearedRails === false) choices.push(language === 'zh' ? '不含可选齿形锁定条' : 'Without optional geared rails');
     return `${t()[build.system]} ${c.width}${c.depth} / ${c.height} · ${choices.join(' · ')}`;
   }
   function storageNotice() {
@@ -61,6 +63,17 @@
       const layout = Object.entries(build.layout);
       return `<li class="plan-entry" data-build-index="${index}"><p class="plan-description">${escape(description(build))}</p><div class="plan-fields"><div><label for="${id}-name">${t().name}</label><input id="${id}-name" data-field="name" maxlength="80" value="${escape(build.name)}"></div><div><label for="${id}-count">${t().count}</label><input id="${id}-count" data-field="count" type="number" min="1" max="999" step="1" required value="${build.count}"></div><div><label for="${id}-status">${t().status}</label><select id="${id}-status" data-field="status">${BuildPlan.statuses.map(status => `<option value="${status}" ${status === build.status ? 'selected' : ''}>${t()[status]}</option>`).join('')}</select></div></div>${layout.length ? `<fieldset class="plan-layout"><legend>${t().layout}</legend><p class="source-note">${t().layoutHint}</p>${layout.map(([path, qty], i) => `<div class="plan-layout-row"><label for="${id}-layout-${i}">${escape(path.split('/').pop())}</label><input id="${id}-layout-${i}" data-layout="${escape(path)}" type="number" min="0" max="999" step="1" placeholder="${t().unknown}" value="${qty ?? ''}"></div>`).join('')}</fieldset>` : ''}<div class="plan-actions"><button type="button" data-action="restore">${t().restore}</button><button type="button" data-action="remove">${t().remove}</button></div></li>`;
     }).join('');
+    if (!preserveEditors) {
+      $('plan-entries').querySelectorAll('[data-build-index]').forEach(row => {
+        const build = builds[Number(row.dataset.buildIndex)];
+        for (const warning of AssemblyGuidance.forBuild(build.system, build.configuration).warnings) {
+          const note = document.createElement('p');
+          note.className = 'plan-assembly-warning';
+          note.textContent = warning.text[language];
+          row.querySelector('.plan-actions').before(note);
+        }
+      });
+    }
     const quantity = file => file.unresolved ? t().unknown + (file.qty ? ` (+${file.qty})` : '') : `×${file.qty}`;
     const fileMarkup = file => `<li class="file-card" data-plan-path="${escape(file.path)}"><div class="file-info"><a class="file-name" href="${escape(encodeURI(file.path))}">${escape(file.path.split('/').pop())}</a><span class="file-path">${escape(file.path)}</span></div><span class="qty-tag">${escape(quantity(file))}</span></li>`;
     const files = $('plan-files');
@@ -84,6 +97,7 @@
     $('plan-availability').hidden = VaultResources.connected;
     STLPreview.decorate($('plan-files'));
     LocalFiles.decorate($('plan-files'));
+    if (root.FileDetails) FileDetails.decorate($('plan-files'), language);
     storageNotice();
     if (root.ScrollTrigger && !preserveEditors) ScrollTrigger.refresh();
   }
@@ -104,6 +118,7 @@
   }
   function init(options) {
     api = options;
+    $('plan-add-count').addEventListener('invalid', () => { const details = $('plan-customize'); if (details) details.open = true; });
     $('plan-add-form').addEventListener('submit', event => {
       event.preventDefault();
       if (!$('plan-add-form').reportValidity()) return;
@@ -146,7 +161,9 @@
     $('plan-export').addEventListener('click', () => {
       const invalid = $('tab-plan').querySelector('input:invalid');
       if (invalid) { invalid.reportValidity(); return; }
-      const csv = BuildPlan.csv(api.store.value.builds);
+      const cell = value => '"' + String(value).replace(/^[\s]*[=+@-]/, match => "'" + match).replace(/"/g, '""') + '"';
+      const reviews = api.store.value.builds.flatMap(build => AssemblyGuidance.forBuild(build.system, build.configuration).warnings.map(warning => ['assembly_review', warning.text[language], '', '', '', description(build)].map(cell).join(',')));
+      const csv = BuildPlan.csv(api.store.value.builds) + (reviews.length ? reviews.join('\r\n') + '\r\n' : '');
       const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
       const link = document.createElement('a');
       link.href = url; link.download = 'vault-print-plan.csv'; document.body.append(link); link.click(); link.remove();

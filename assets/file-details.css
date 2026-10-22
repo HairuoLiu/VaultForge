@@ -1,0 +1,48 @@
+.has-file-details .file-info { gap: 3px; }
+.has-file-details .part-role { color: var(--ink); font-size: 13px; font-weight: 600; line-height: 1.6; overflow-wrap: anywhere; }
+.has-file-details .file-name { color: var(--muted); font-size: 11px; font-weight: 450; white-space: normal; overflow-wrap: anywhere; }
+.has-file-details .file-name:hover { color: var(--accent); }
+.has-file-details .local-file-status { align-self: flex-start; }
+.file-card.has-file-details { padding-block: 12px; }
+.file-details {
+  position: relative;
+  z-index: 1;
+  align-self: stretch;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.file-details > summary {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 6px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 450;
+  line-height: 1.6;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+.file-details > summary::-webkit-details-marker { display: none; }
+.file-details > summary::before { content: '+'; flex-shrink: 0; width: 10px; color: var(--accent); font-size: 14px; text-align: center; }
+.file-details[open] > summary { margin-bottom: 0; }
+.file-details[open] > summary::before { content: '−'; }
+.file-details > summary:hover { color: var(--ink); }
+.file-details > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+.file-detail-content { display: flex; flex-direction: column; gap: 7px; padding: 0 0 9px 17px; border-left: 1px solid var(--line); }
+.file-detail-content .part-note, .file-detail-content .roof-desc, .file-detail-content .file-path { margin: 0; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+.file-detail-content .part-note:empty, .file-detail-content .roof-desc:empty { display: none; }
+.roof-card.has-file-details { gap: 10px; }
+@media (max-width: 760px) {
+  .has-file-details .qty-tag { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+  .has-file-details .stl-actions { flex-wrap: wrap; max-width: 100%; }
+  .has-file-details .file-info { min-width: 0; }
+}

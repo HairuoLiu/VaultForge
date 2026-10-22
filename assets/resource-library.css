@@ -1,0 +1,74 @@
+.workspace-sections { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 24px; }
+.workspace-sections > button { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 20px; min-height: 92px; text-align: left; border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 6px; background: var(--white); color: var(--ink); }
+.workspace-sections > button strong { font-size: 17px; font-weight: 600; }
+.workspace-sections > button > span { font-size: 12px; line-height: 1.5; color: var(--muted); }
+.workspace-sections > button:hover { background: var(--soft); }
+.workspace-sections > button.is-selected { border-bottom-color: var(--ink); background: var(--soft); }
+.library-title { margin: 0; font-size: 24px; font-weight: 550; }
+.library-intro { margin: 12px 0 24px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.manual-library-layout { display: grid; grid-template-columns: 310px minmax(0, 1fr); gap: 28px; align-items: start; }
+#manual-catalog { display: grid; gap: 8px; margin: 0; }
+#manual-catalog .manual-link-btn { display: flex; align-items: start; gap: 12px; width: 100%; padding: 16px; text-align: left; background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 5px; }
+#manual-catalog .manual-link-btn::before { content: none; }
+#manual-catalog .manual-link-btn:hover { background: var(--soft); }
+#manual-catalog .manual-link-btn.active-doc { border-color: var(--ink); background: var(--soft); }
+.manual-number { color: var(--muted); font-size: 12px; padding-top: 2px; }
+.manual-card-body { display: grid; gap: 8px; min-width: 0; }
+.manual-card-body strong { font-size: 14px; font-weight: 600; }
+.manual-card-description { font-size: 12px; line-height: 1.65; color: var(--muted); }
+.manual-card-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 10px; line-height: 1.6; }
+.manual-state { color: var(--muted); }
+.manual-state[data-state="ready"] { color: #42613d; }
+.manual-state[data-state="missing"] { color: #9b431d; }
+.manual-recommended { padding: 1px 6px; background: #e4e9dc; color: #3d5139; border-radius: 3px; }
+#manual-reader { min-width: 0; scroll-margin-top: 24px; }
+.manual-reader-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+#manual-title { margin: 0; font-size: 22px; font-weight: 550; }
+#manual-language { font-size: 11px; color: var(--muted); white-space: nowrap; }
+#manual-description { font-size: 13px; color: var(--muted); line-height: 1.8; margin: 12px 0 20px; }
+#manual-reader .manual-toolbar { flex-direction: column; align-items: start; gap: 12px; padding: 16px 0; border-top: 1px solid var(--line); }
+#manual-filename { font-size: 11px; color: var(--muted); }
+#manual-reader .manual-actions { font-size: 12px; flex-wrap: wrap; }
+#manual-reader .manual-status { font-size: 13px; line-height: 1.8; }
+#manual-reader .pdf-viewer-frame { min-height: 560px; height: 72vh; }
+#manual-connect { margin-top: 12px; }
+.build-handle-option { margin-top: 18px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 5px; background: var(--soft); }
+.build-handle-option label { display: flex; align-items: center; gap: 10px; min-height: 32px; font-size: 14px; cursor: pointer; }
+.build-handle-option input { width: 18px; height: 18px; accent-color: var(--ink); }
+.build-handle-option p { font-size: 12px; line-height: 1.8; color: var(--muted); margin: 8px 0 0 28px; }
+.build-preparation { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; margin-block: 24px 32px; padding-block: 20px; border-block: 1px solid var(--line); }
+.build-preparation .section-title { margin: 0 0 16px; }
+.build-hardware-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; line-height: 1.7; }
+.build-hardware-table th, .build-hardware-table td { padding: 12px 8px; vertical-align: top; border-bottom: 1px solid var(--line); }
+.build-hardware-table thead th { color: var(--muted); font-weight: 400; padding-top: 0; }
+.build-hardware-table tbody th { min-width: 110px; font-weight: 600; }
+.build-hardware-table td:nth-child(2) { white-space: nowrap; }
+.preparation-source { font-size: 11px; line-height: 1.8; margin-top: 5px; }
+.preparation-source a { text-underline-offset: 3px; color: var(--muted); }
+#build-assembly-steps { padding-left: 20px; margin: 0; }
+#build-assembly-steps li { padding: 0 0 3px 4px; font-size: 12px; }
+#build-assembly-steps li:last-child { padding-bottom: 0; }
+#build-assembly-steps strong { font-size: 13px; }
+#build-assembly-steps .assembly-step { padding: 0; margin: 0; border: 0; background: transparent; }
+#build-assembly-steps .assembly-step summary { min-height: 40px; padding: 9px 0; font-size: 13px; font-weight: 550; line-height: 1.7; }
+#build-assembly-steps .assembly-step[open] { padding-bottom: 14px; }
+#build-assembly-steps p { margin: 6px 0 0; color: var(--muted); line-height: 1.8; }
+#build-cautions { margin-top: 16px; background: #f8efe2; border-left: 3px solid #98622e; padding: 16px; font-size: 13px; line-height: 1.8; }
+#build-cautions p { margin: 8px 0 0; }
+.file-quantity { display: grid; justify-items: end; gap: 8px; flex-shrink: 0; }
+.file-quantity small { max-width: 130px; font-size: 10px; color: var(--muted); text-align: right; line-height: 1.7; }
+.plan-entry .plan-assembly-warning { padding: 12px; background: #f8efe2; font-size: 12px; line-height: 1.8; }
+@media (max-width: 900px) {
+  .build-preparation { grid-template-columns: minmax(0, 1fr); }
+  .manual-library-layout { grid-template-columns: minmax(0, 1fr); }
+  #manual-catalog { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .workspace-sections { gap: 6px; margin-bottom: 18px; }
+  .workspace-sections > button { padding: 12px 8px; min-height: 65px; align-items: center; justify-content: center; }
+  .workspace-sections > button strong { font-size: 12px; }
+  .workspace-sections > button > span { display: none; }
+  #manual-catalog { grid-template-columns: minmax(0, 1fr); }
+  #manual-catalog .manual-link-btn { padding: 14px; }
+  #manual-reader .pdf-viewer-frame { min-height: 450px; height: 65vh; }
+}

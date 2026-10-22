@@ -1,0 +1,337 @@
+#tab-modifications #mod-overview-title {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 550;
+  letter-spacing: -.03em;
+  scroll-margin-top: 24px;
+}
+
+#tab-modifications #mod-intro {
+  margin: 0 0 22px;
+  max-width: 66ch;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+#mod-category-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 24px;
+}
+
+#mod-category-cards .mod-category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 150px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper, #fffef9);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+#mod-category-cards .mod-category-card:hover {
+  background: #eeeee6;
+}
+
+#mod-category-cards .mod-category-card.is-selected {
+  border-color: var(--ink);
+  background: var(--soft);
+}
+
+#mod-category-cards .mod-category-card:focus-visible,
+#tab-modifications #mod-back-categories:focus-visible,
+#tab-modifications .mod-guide-link a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+#mod-category-cards .mod-category-name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+#mod-category-cards .mod-category-purpose {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+#mod-category-cards .mod-category-count {
+  margin-top: auto;
+  padding-top: 5px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+#tab-modifications #mod-browser {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+#tab-modifications #mod-browser[hidden] {
+  display: none;
+}
+
+#tab-modifications #mod-back-categories {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+#tab-modifications #mod-selection-heading {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 550;
+  letter-spacing: -.025em;
+  scroll-margin-top: 26px;
+}
+
+#tab-modifications .mod-browser-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 20px;
+  margin-bottom: 20px;
+}
+
+#tab-modifications .mod-files-title {
+  margin: 26px 0 14px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+#tab-modifications .mod-selectors {
+  gap: 18px;
+  padding-bottom: 20px;
+}
+
+#tab-modifications .configuration-note {
+  margin: 20px 0 16px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+#tab-modifications .mod-assembly-note {
+  margin-top: 0;
+  max-width: 82ch;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+#tab-modifications .mod-guide-link {
+  margin: 10px 0 16px;
+}
+
+#tab-modifications .mod-guide-link a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #eeeee6;
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.6;
+  text-decoration: none;
+}
+
+#tab-modifications .mod-guide-link a:hover {
+  border-color: var(--ink);
+}
+
+#tab-modifications .mod-guidance {
+  margin: 22px 0 28px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+#tab-modifications .mod-guidance h4 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+#tab-modifications .mod-guidance-intro {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+
+#tab-modifications .mod-guidance-warning {
+  margin-bottom: 20px;
+  padding: 16px 18px;
+  border: 1px solid #c18a55;
+  border-left: 4px solid #a46a35;
+  border-radius: 5px;
+  background: #f8f0df;
+  color: #694523;
+}
+
+#tab-modifications .mod-guidance-warning > strong {
+  font-size: 13px;
+}
+
+#tab-modifications .mod-guidance-warning > p {
+  margin: 6px 0;
+}
+
+#tab-modifications .mod-hardware table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  text-align: left;
+}
+
+#tab-modifications .mod-hardware th,
+#tab-modifications .mod-hardware td {
+  padding: 12px 14px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+#tab-modifications .mod-hardware thead th {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: var(--muted);
+  background: var(--paper);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+#tab-modifications .mod-hardware th:first-child {
+  width: 29%;
+}
+
+#tab-modifications .mod-hardware th:nth-child(2) {
+  width: 24%;
+}
+
+#tab-modifications .mod-hardware tbody th {
+  font-weight: 550;
+}
+
+#tab-modifications .mod-hardware-quantity > strong,
+#tab-modifications .mod-hardware-quantity > span {
+  display: block;
+}
+
+#tab-modifications .mod-hardware-quantity > span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+#tab-modifications .mod-hardware-quantity.is-unconfirmed > strong {
+  font-weight: 500;
+}
+
+#tab-modifications .mod-guidance-sources {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 14px;
+}
+
+#tab-modifications .mod-guidance-sources a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 11px;
+  line-height: 1.6;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+#tab-modifications .mod-guidance-notes {
+  padding-left: 18px;
+  margin: 20px 0;
+  color: var(--muted);
+}
+
+#tab-modifications .mod-guidance-notes li + li {
+  margin-top: 8px;
+}
+
+#tab-modifications .mod-assembly-steps {
+  margin-top: 24px;
+}
+
+#tab-modifications .mod-assembly-steps ol {
+  display: grid;
+  gap: 16px;
+  margin: 14px 0 0;
+  padding-left: 22px;
+}
+
+#tab-modifications .mod-assembly-steps li {
+  padding-left: 4px;
+}
+
+#tab-modifications .mod-assembly-steps strong {
+  font-size: 13px;
+  font-weight: 550;
+}
+
+#tab-modifications .mod-assembly-steps p {
+  margin: 5px 0 0;
+  color: var(--muted);
+}
+
+@media (max-width: 850px) {
+  #mod-category-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  #mod-category-cards {
+    gap: 10px;
+  }
+
+  #mod-category-cards .mod-category-card {
+    min-height: 164px;
+    padding: 15px;
+    gap: 8px;
+  }
+
+  #tab-modifications #mod-overview-title {
+    font-size: 20px;
+  }
+
+  #tab-modifications .mod-hardware th,
+  #tab-modifications .mod-hardware td {
+    padding: 12px 6px;
+  }
+
+  #tab-modifications .mod-hardware th:first-child {
+    width: 33%;
+  }
+
+  #tab-modifications .mod-hardware th:nth-child(2) {
+    width: 28%;
+  }
+
+  #tab-modifications .mod-guidance-warning {
+    padding: 14px;
+  }
+}

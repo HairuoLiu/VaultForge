@@ -13,7 +13,8 @@
     }
     const height = choose(root.DrawerCatalog.heights(width), value.height);
     const roofs = root.DrawerCatalog.resolve({ width, depth, height }).roofs.map(part => part.role);
-    return { width, depth, height, key: choose(['standard', 'hidden'], value.key), drawerRoof: choose(['none', ...roofs], value.drawerRoof) };
+    const drawerRoof = choose(['none', ...roofs], value.drawerRoof);
+    return { width, depth, height, key: choose(['standard', 'hidden'], value.key), drawerRoof, topHandle: drawerRoof === 'grid' && value.topHandle === true, gearedRails: value.gearedRails !== false };
   }
 
   function resolve(system, configuration) {
@@ -24,15 +25,31 @@
     if (system !== 'drawers') throw new Error('Unknown component system');
     const result = root.DrawerCatalog.resolve(configuration);
     if (!['standard', 'hidden'].includes(configuration.key) || !['none', ...result.roofs.map(part => part.role)].includes(configuration.drawerRoof)) throw new Error('Choose a valid key and roof');
+    if (configuration.topHandle !== undefined && typeof configuration.topHandle !== 'boolean') throw new Error('Choose whether to include the top handle');
+    if (configuration.topHandle && configuration.drawerRoof !== 'grid') throw new Error('The top handle requires a Grid roof');
+    if (configuration.gearedRails !== undefined && typeof configuration.gearedRails !== 'boolean') throw new Error('Choose whether to include the geared lock rails');
     const keys = result.keys.filter(part => configuration.key === 'standard' ? part.role === 'standardKey' : part.role !== 'standardKey');
-    return { parts: [...result.structure, ...result.mechanism, ...keys, ...result.roofs.filter(part => part.role === configuration.drawerRoof)], hardware: [{ size: 'M4 × 14 mm', qty: result.bolts }] };
+    const structure = configuration.gearedRails === false ? result.structure.filter(part => part.role !== 'rails') : result.structure;
+    const parts = [...structure, ...result.mechanism, ...keys, ...result.roofs.filter(part => part.role === configuration.drawerRoof)];
+    const hardware = [{ size: 'M4 × 14 mm', qty: result.bolts, role: 'drawerFacade', sourceManual: '01', sourcePage: 18 }];
+    if (configuration.topHandle) {
+      parts.push({ path: '01. DRAWERS/07. Universal/Top Handle (Turn On Supports).stl', qty: 1, role: 'topHandle' });
+      hardware.push({ size: 'M6 × 50 mm', qty: 2, role: 'topHandle', sourceManual: '01', sourcePage: 18 });
+    }
+    return { parts, hardware };
   }
 
   function entry(value) {
     if (!value || !['drawers', 'sustainers'].includes(value.system) || !integer(value.count, 1)) throw new Error('Invalid build quantity');
-    const configuration = normalizeConfiguration(value.system, value.configuration);
+    // Legacy plans included geared rails but did not include a top handle.
+    const savedConfiguration = value.system === 'drawers' ? {
+      ...value.configuration,
+      topHandle: value.configuration?.topHandle === undefined ? false : value.configuration.topHandle,
+      gearedRails: value.configuration?.gearedRails === undefined ? true : value.configuration.gearedRails
+    } : value.configuration;
+    const configuration = normalizeConfiguration(value.system, savedConfiguration);
     // Stored plans must never silently change to a different build.
-    if (Object.keys(configuration).some(key => configuration[key] !== value.configuration?.[key])) throw new Error('Unsupported saved configuration');
+    if (Object.keys(configuration).some(key => configuration[key] !== savedConfiguration?.[key])) throw new Error('Unsupported saved configuration');
     const { parts } = resolve(value.system, configuration);
     const layout = {};
     for (const part of parts.filter(part => part.qty === null)) {

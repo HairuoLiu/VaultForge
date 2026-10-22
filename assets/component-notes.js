@@ -8,7 +8,14 @@ globalThis.ComponentNotes = {
     supportSource: 'Print supports · Manual 01, page 20',
     mechanismNote: 'Choose the standard key or BOTH hidden-key parts. The key assembly is the “Key Lock” shown in the assembly guide. Filenames and quantities below refer to STL copies; check the arrangement in your slicer.',
     hardwareNote: 'This archive’s manual specifies 4 bolts for 1F and 6 for 2F/4F. The current website notes that quantities vary by model; confirm the actual holes before buying hardware.',
-    handleNote: 'Optional top handle: this manual specifies 2 × M6 × 50 mm. The current website shows 40 mm; verify the selected handle and bolt engagement before purchasing.',
+    handleNote: 'Optional Grid roof handle: one printed handle and 2 × M6 × 50 mm bolts, as specified in this archive’s manual.',
+    hardwareUse: { drawerFacade: 'Attach the front facade to the drawer box', topHandle: 'Attach the selected top handle to the Grid roof' },
+    gridRoofInstallation: 'Use the Grid roof that matches the drawer width and depth. The top handle is a separate option: selecting it adds one handle and its two mounting bolts to the plan.',
+    gridRoofSource: 'Grid roof & handle placement · Manual 01, page 11',
+    topHandleNote: 'Print one top handle with slicer supports enabled. Its two mounting bolts are listed separately from the drawer facade bolts.',
+    topHandleSource: 'Top handle hardware · Manual 01, page 18',
+    gearedRailsNote: 'The upper and lower geared lock rails are optional enhancements. The assembly guide recommends them for stronger locking or when using multiple boxes in one module; runner guides and slides are still required.',
+    gearedRailsSource: 'Optional geared lock rails · Manual 02, page 4',
     hardwareSource: 'Archive hardware reference · Manual 01, page 18',
     roofNote: 'Choose one roof style for the top of your drawer stack. Roofs below match the selected width and depth; a carry handle is an additional component.',
     roofSource: 'Roof styles · Manual 01, page 10',
@@ -19,8 +26,8 @@ globalThis.ComponentNotes = {
     caseRoofFixed: 'This archive includes a one-piece lid only for this size.',
     caseRoofSource: 'Lid & hinge reference · Manual 01, page 12',
     official: 'Original VAULT website ↗',
-    role: { module: 'Outer module', box: 'Drawer box', splitBox: 'Split drawer box', backPanel: 'Rear panel', facade: 'Front facade · Supports required', xlFacade: 'XL front facade', rails: 'Geared lock rail', guides: 'Runner guide', slides: 'Runner slide', stopper: 'Travel stop', latch: 'Latch', springs: 'Springs', keyCap: 'Key cap', facadeCap: 'Facade cap', label: 'Label insert', standardKey: 'Standard key · Supports required', hiddenKey: 'Hidden key · Part 1 · Supports required', hiddenKeyPart: 'Hidden key · Part 2 · Supports required' },
-    note: { module: 'Match width, depth and height to the box.', box: 'Slides inside the matching outer module.', splitBox: 'Both halves are required for one drawer.', backPanel: 'Install with the XL3–XL5 box.', facade: 'Enable slicer supports as indicated in the filename.', xlFacade: 'Shared across XL 1F depths; preserve the archive filename.', rails: 'Match the width; check the manual supports before assembly.', guides: 'Match the depth; XL uses its own runner family.', slides: 'Use with the matching runner guides.', stopper: 'Fit to the runner mechanism following the assembly sequence.', latch: 'Part of the front locking mechanism.', springs: 'Fit with the latch; check the orientation in the assembly guide.', keyCap: 'Fits onto the selected key assembly.', facadeCap: 'Front facade finishing part.', label: 'Identification insert for the front of the drawer.' }
+    role: { module: 'Outer module', box: 'Drawer box', splitBox: 'Split drawer box', backPanel: 'Rear panel', facade: 'Front facade · Supports required', xlFacade: 'XL front facade', rails: 'Geared lock rails · Selected enhancement', guides: 'Runner guide', slides: 'Runner slide', stopper: 'Travel stop', latch: 'Latch', springs: 'Springs', keyCap: 'Key cap', facadeCap: 'Facade cap', label: 'Label insert', standardKey: 'Standard key · Supports required', hiddenKey: 'Hidden key · Part 1 · Supports required', hiddenKeyPart: 'Hidden key · Part 2 · Supports required', topHandle: 'Grid roof handle · Supports required' },
+    note: { module: 'Match width, depth and height to the box.', box: 'Slides inside the matching outer module.', splitBox: 'Both halves are required for one drawer.', backPanel: 'Install with the XL3–XL5 box.', facade: 'Enable slicer supports as indicated in the filename.', xlFacade: 'Shared across XL 1F depths; preserve the archive filename.', rails: 'Optional upper and lower lock rails for stronger locking or multiple boxes in one module. Match the width and check manual supports; see Manual 02, page 4. Runner guides and slides are separate required parts.', guides: 'Match the depth; XL uses its own runner family.', slides: 'Use with the matching runner guides.', stopper: 'Fit to the runner mechanism following the assembly sequence.', latch: 'Part of the front locking mechanism.', springs: 'Fit with the latch; check the orientation in the assembly guide.', keyCap: 'Fits onto the selected key assembly.', facadeCap: 'Front facade finishing part.', label: 'Identification insert for the front of the drawer.', topHandle: 'Print one copy with supports enabled. Fit to the Grid roof using 2 × M6 × 50 mm bolts; see Manual 01, pages 11 / 18.' }
   },
   zh: {
     configuration: '堆叠时匹配宽度和深度。深度标注对应 42 mm 的 Gridfinity 网格，并非模块外尺寸。下列链接按当前文件包的真实名称匹配。',
@@ -31,7 +38,14 @@ globalThis.ComponentNotes = {
     supportSource: '打印支撑参考 · 01 使用说明书第 20 页',
     mechanismNote: '标准钥匙与隐藏式钥匙二选一，隐藏式必须同时打印两件。钥匙组件对应组装图中的 Key Lock。下方数量按 STL 打印份数列出，请在切片软件中核对文件内的排布。',
     hardwareNote: '本文件包说明书标注：1F 需 4 颗，2F / 4F 需 6 颗。官网现版提示数量随型号变化，采购前请以实际安装孔位核对。',
-    handleNote: '选装顶部提手：本包说明书列出 M6 × 50 mm 螺丝 2 颗；官网现版为 40 mm，采购前请核对所选提手和有效连接长度。',
+    handleNote: '选装 Grid 顶盖提手：按本包说明书，需打印提手 1 份，并准备 M6 × 50 mm 螺丝 2 颗。',
+    hardwareUse: { drawerFacade: '把前面板固定到抽屉内盒', topHandle: '把已选顶部提手固定到 Grid 顶盖' },
+    gridRoofInstallation: 'Grid 顶盖按抽屉的宽度和深度匹配。顶部提手需要单独选择；启用后，提手 1 份和安装用的两颗螺丝会一起计入清单。',
+    gridRoofSource: 'Grid 顶盖与提手安装位置 · 01 使用说明书第 11 页',
+    topHandleNote: '顶部提手打印 1 份，切片时开启支撑。两颗提手安装螺丝与抽屉前面板螺丝分别列出。',
+    topHandleSource: '顶部提手安装五金 · 01 使用说明书第 18 页',
+    gearedRailsNote: '上下齿形锁定条属于选装增强件。组装说明建议在需要更强锁定力、或同一外框放多个内盒时使用；导轨导向件和滑动件仍需保留。',
+    gearedRailsSource: '选装齿形锁定条 · 02 抽屉组装第 4 页',
     hardwareSource: '本包五金清单 · 01 使用说明书第 18 页',
     roofNote: '抽屉堆叠最顶层选一种顶盖即可。下方顶盖已匹配当前宽度和深度；如需提手，还须另配对应提手组件。',
     roofSource: '顶盖样式参考 · 01 使用说明书第 10 页',
@@ -42,8 +56,8 @@ globalThis.ComponentNotes = {
     caseRoofFixed: '当前文件包中，此规格仅提供整块翻盖。',
     caseRoofSource: '翻盖与铰链参考 · 01 使用说明书第 12 页',
     official: '查看 VAULT 原版网站 ↗',
-    role: { module: '抽屉外框', box: '抽屉内盒', splitBox: '分体抽屉内盒', backPanel: '内盒背板', facade: '前面板 · 需开启支撑', xlFacade: 'XL 前面板', rails: '齿形锁定导轨', guides: '导轨导向件', slides: '导轨滑动件', stopper: '导轨限位件', latch: '锁舌', springs: '弹簧件', keyCap: '钥匙帽', facadeCap: '前面板盖片', label: '标签片', standardKey: '标准钥匙 · 需开启支撑', hiddenKey: '隐藏式钥匙 · 零件 1 · 需开启支撑', hiddenKeyPart: '隐藏式钥匙 · 零件 2 · 需开启支撑' },
-    note: { module: '宽度、深度和层高需与内盒匹配。', box: '装入对应规格的外框，配合导轨滑动。', splitBox: '两片均需打印，共同组成一个内盒。', backPanel: '与 XL3–XL5 的内盒一起安装。', facade: '按原文件名提示，在切片软件中开启支撑。', xlFacade: 'XL 1F 各深度共用，保留原包文件名。', rails: '按宽度匹配，组装前核对并处理手动支撑。', guides: '按深度匹配；XL 使用专用导轨系列。', slides: '与同规格导向件成套使用。', stopper: '按组装顺序安装到导轨机构。', latch: '用于抽屉前部锁定机构。', springs: '与锁舌配合，安装方向参考组装说明。', keyCap: '安装在所选钥匙组件上。', facadeCap: '用于前面板的收口盖片。', label: '用于标识抽屉存放的物品。' }
+    role: { module: '抽屉外框', box: '抽屉内盒', splitBox: '分体抽屉内盒', backPanel: '内盒背板', facade: '前面板 · 需开启支撑', xlFacade: 'XL 前面板', rails: '齿形锁定条 · 已选增强件', guides: '导轨导向件', slides: '导轨滑动件', stopper: '导轨限位件', latch: '锁舌', springs: '弹簧件', keyCap: '钥匙帽', facadeCap: '前面板盖片', label: '标签片', standardKey: '标准钥匙 · 需开启支撑', hiddenKey: '隐藏式钥匙 · 零件 1 · 需开启支撑', hiddenKeyPart: '隐藏式钥匙 · 零件 2 · 需开启支撑', topHandle: 'Grid 顶盖提手 · 需开启支撑' },
+    note: { module: '宽度、深度和层高需与内盒匹配。', box: '装入对应规格的外框，配合导轨滑动。', splitBox: '两片均需打印，共同组成一个内盒。', backPanel: '与 XL3–XL5 的内盒一起安装。', facade: '按原文件名提示，在切片软件中开启支撑。', xlFacade: 'XL 1F 各深度共用，保留原包文件名。', rails: '可选的上下锁定条，用于增强锁定力或同外框多内盒；按宽度匹配，组装前处理手动支撑。见 02 抽屉组装第 4 页；导向件和滑动件是另需保留的导轨。', guides: '按深度匹配；XL 使用专用导轨系列。', slides: '与同规格导向件成套使用。', stopper: '按组装顺序安装到导轨机构。', latch: '用于抽屉前部锁定机构。', springs: '与锁舌配合，安装方向参考组装说明。', keyCap: '安装在所选钥匙组件上。', facadeCap: '用于前面板的收口盖片。', label: '用于标识抽屉存放的物品。', topHandle: '打印 1 份并开启支撑，使用 M6 × 50 mm 螺丝 2 颗安装到 Grid 顶盖；见 01 使用说明书第 11 / 18 页。' }
   }
 };
 

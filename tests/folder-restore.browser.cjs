@@ -63,11 +63,14 @@ async function main() {
       const models = await folder.getDirectoryHandle('01. DRAWERS');
       const file = await models.getFileHandle('New file.STL', {create:true});
       const writer = await file.createWritable(); await writer.write('new file'); await writer.close();
+      if (document.getElementById('flow-folder-toggle').getAttribute('aria-expanded') !== 'true') document.getElementById('flow-folder-toggle').click();
       document.getElementById('vault-rescan').scrollIntoView({behavior:'instant',block:'center'});
     })()`);
     run('click', '#vault-rescan');
     run('wait', '--fn', '!!VaultResources.getFile("01. DRAWERS/New file.STL")');
     console.log('PASS: cancel and invalid selection preserve the folder; rescan picks up new files');
+    evaluate(`if (document.getElementById('flow-folder-toggle').getAttribute('aria-expanded') !== 'true') document.getElementById('flow-folder-toggle').click();`);
+    run('snapshot', '-i');
     run('click', '#vault-disconnect');
     run('wait', '--fn', '!VaultResources.connected && document.getElementById("vault-connection").getAttribute("aria-busy") === "false"');
     run('reload');
