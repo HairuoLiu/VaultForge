@@ -14,7 +14,8 @@
     const base = '01. DRAWERS/' + family + '/';
     const universal = '01. DRAWERS/07. Universal/';
     const wd = w + d;
-    const runner = (w === 'XL' ? 'XL' : 'x') + d;
+    const runnerDirectory = universal + 'Runners/' + (w === 'XL' ? 'XL Runners/' : '');
+    const runnerSuffix = w === 'XL' ? ' XL' : '';
     const structure = [item(`${base}${wd}/Modules/${wd} Module ${h}.stl`, 1, 'module')];
     if (w === 'XL' && Number(d) >= 6) {
       [1, 2].forEach(part => structure.push(item(`${base}${wd}/Boxes/${wd} Box 1F Part ${part}.stl`, 1, 'splitBox')));
@@ -25,8 +26,8 @@
     structure.push(
       item(w === 'XL' ? `${base}XL Facade 1F.stl` : `${base}Facades/${w}${h} (Turn On Supports).stl`, 1, w === 'XL' ? 'xlFacade' : 'facade'),
       item(`${universal}Geared Rails/${w} Rails.stl`, 2, 'rails'),
-      item(`${universal}Runners/${runner} Runner Guides.stl`, 2, 'guides'),
-      item(`${universal}Runners/${runner} Runner Slides.stl`, 2, 'slides')
+      item(`${runnerDirectory}x${d} Runner Guide${runnerSuffix}.stl`, 2, 'guides'),
+      item(`${runnerDirectory}x${d} Runner Slide${runnerSuffix}.stl`, 2, 'slides')
     );
     const mechanism = [
       item(universal + 'Runners/Runner Stopper.stl', 2, 'stopper'),

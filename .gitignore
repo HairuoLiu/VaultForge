@@ -1,0 +1,12 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+
+# Original VAULT resources are supplied separately.
+/01. DRAWERS/
+/02. SUSTAINERS/
+/03. MODIFICATIONS/
+*.stl
+*.STL
+*.pdf
+*.PDF

@@ -4,7 +4,7 @@
 
 USSA VAULT 的非官方本地组装工作台：查找组件、预览 STL、阅读说明书、整理打印清单。无需安装应用或启动服务，模型和文档不上传。
 
-![Vault 组装工作台](docs/screenshots/workspace.png)
+![Vault 组装工作台](assets/screenshots/workspace.png)
 
 ## 快速开始
 
@@ -40,7 +40,7 @@ My Vault/
 - 汇总包含已完成方案；修改数量会将该批进度重置为「待打印」。
 - 清单保存在当前浏览器，清除浏览器数据可能丢失；CSV 暂不支持导入。
 
-[查看打印清单截图](docs/screenshots/print-plan.png)
+![打印清单：合并方案、填写数量与记录进度](assets/screenshots/print-plan.png)
 
 ## 使用说明
 
@@ -50,13 +50,15 @@ My Vault/
 
 ## 开发与测试
 
-原生 HTML / CSS / JavaScript，使用 Three.js 和 Web Worker。在支持全局 `File`、`Blob`、`fetch` 的 Node.js 环境中，进入 `workbench/` 运行：
+原生 HTML / CSS / JavaScript，使用 Three.js 和 Web Worker。在支持全局 `File`、`Blob`、`fetch` 的 Node.js 环境中，进入项目目录（`index.html` 所在目录）运行：
 
 ```bash
 node --test tests/*.test.cjs
 ```
 
 测试自动查找当前目录或上一级的资源包，也可通过 `VAULT_RESOURCE_ROOT` 指定路径。未提供资源包时，跳过三个真实资源校验用例。
+
+目录生成与预览服务测试：`python3 -m unittest discover -s tests -p 'test_*.py'`。已安装 agent-browser 时，可运行 `node tests/workspace.browser.cjs /path/to/agent-browser` 检查清单编辑和刷新恢复；该测试使用独立临时浏览器配置。
 
 修改 `assets/stl-worker.js` 后，按 [构建脚本](scripts/build-stl-vendor.cjs) 中的说明重新打包预览引擎。
 

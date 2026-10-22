@@ -4,7 +4,7 @@
 
 An unofficial local workspace for USSA VAULT: find parts, preview STL models, read manuals, and plan your prints. No app installation or server required. Models and documents stay on your device.
 
-![Vault assembly workspace](docs/screenshots/workspace.png)
+![Vault assembly workspace](assets/screenshots/workspace.png)
 
 ## Quick start
 
@@ -40,7 +40,7 @@ Choose a configuration → enter the module count → **Add to print plan** → 
 - Totals include completed builds. Changing quantities resets that batch to “To print”.
 - Plans are saved in this browser and may be lost if browser data is cleared. CSV import is not supported yet.
 
-[View the print plan screenshot](docs/screenshots/print-plan.png)
+![Print plan with named builds, quantities, and batch progress](assets/screenshots/print-plan.png)
 
 ## Usage notes
 
@@ -50,13 +50,15 @@ Select one resource pack at a time. Missing or conflicting files are flagged. Sa
 
 ## Development and tests
 
-Plain HTML / CSS / JavaScript with Three.js and Web Workers. In a Node.js environment with global `File`, `Blob`, and `fetch`, run from `workbench/`:
+Plain HTML / CSS / JavaScript with Three.js and Web Workers. In a Node.js environment with global `File`, `Blob`, and `fetch`, run from the project directory containing `index.html`:
 
 ```bash
 node --test tests/*.test.cjs
 ```
 
 Tests locate the resource pack in the current or parent directory. Set `VAULT_RESOURCE_ROOT` to use another location. Without a resource pack, the three archive validation tests are skipped.
+
+Catalog builder and preview server tests: `python3 -m unittest discover -s tests -p 'test_*.py'`. With agent-browser installed, run `node tests/workspace.browser.cjs /path/to/agent-browser` to check plan editing and reload recovery in an isolated temporary browser profile.
 
 After changing `assets/stl-worker.js`, rebuild the preview engine using the instructions in the [build script](scripts/build-stl-vendor.cjs).
 

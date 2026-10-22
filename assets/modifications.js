@@ -39,7 +39,7 @@
       note: 'These are component files, not an assembly shopping list. Unmarked and shared parts remain visible with size filters; confirm compatibility and print quantities in the guide. Whole and split versions are alternatives.',
       source: 'Assembly reference', hardware: 'Hardware overview · Manual 01, page 3', naming: 'Component diagram · Manual 01, page 13',
       manual: 'Open modifications guide ↗', mountManual: 'Mounting instructions ↗', empty: 'No matching component files.',
-      hint: 'Click a filename to select the original STL in its folder, or use 3D preview to inspect it here.',
+      hint: 'Click a filename to save a copy, or use 3D preview to inspect it here. The relative path locates the original file in your Vault.',
       categoryNotes: {
         base: 'Match the base width and depth. For depths 6/7, choose the whole base or both split halves; check the connector in the assembly. Caster installation is shown on page 17 of manual 04.',
         backbone: 'The guide shows both family-specific and universal backbones. XL-specific backbones are supplied in 1F only. For the illustrated mobile tower, the manual recommends 2F modules above the base and below the roof; check the drilling sequence.',
@@ -65,7 +65,7 @@
       note: '这里展示组件文件，不代表整套组装的备料清单。筛选时保留通用和未标注尺寸的配件，兼容方式与打印数量请核对说明书；整块与分体版本为替代方案。',
       source: '组装参考', hardware: '五金总表 · 01 使用说明书第 3 页', naming: '组件结构图 · 01 使用说明书第 13 页',
       manual: '查看选配改造说明 ↗', mountManual: '查看安装说明 ↗', empty: '没有匹配的组件文件。',
-      hint: '点击文件名，在所在文件夹中选中原始 STL；点击「3D 预览」，在页面中查看模型。',
+      hint: '点击文件名保存副本，点击「3D 预览」查看模型；相对路径标明原文件在 Vault 中的位置。',
       categoryNotes: {
         base: '底座需匹配宽度与深度。6 / 7 深度可选整块底座或两片分体底座，连接件按组装图使用；脚轮安装参考 04 号说明书第 17 页。',
         backbone: '原版同时展示专用与通用背部连接件。XL 专用背板仅提供 1F。针对图示移动塔架，说明书建议底座上方、顶盖下方使用 2F 模块，并按步骤定位、钻孔。',

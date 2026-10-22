@@ -47,7 +47,7 @@
     $('workspace-save-status').textContent = !api.store.available ? t().storage : api.store.recovered ? t().recovered : t().saved;
     $('workspace-save-status').dataset.warning = String(!api.store.available || api.store.recovered);
   }
-  function render() {
+  function render({ preserveEditors = false } = {}) {
     if (!api) return;
     const builds = api.store.value.builds;
     const summary = BuildPlan.summarize(builds);
@@ -56,20 +56,38 @@
     $('plan-export').disabled = !builds.length || !!summary.unresolved;
     $('plan-unresolved').hidden = !summary.unresolved;
     $('plan-count').textContent = t().total(builds.length, builds.reduce((sum, build) => sum + build.count, 0));
-    $('plan-entries').innerHTML = builds.map((build, index) => {
+    if (!preserveEditors) $('plan-entries').innerHTML = builds.map((build, index) => {
       const id = 'build-' + index;
       const layout = Object.entries(build.layout);
       return `<li class="plan-entry" data-build-index="${index}"><p class="plan-description">${escape(description(build))}</p><div class="plan-fields"><div><label for="${id}-name">${t().name}</label><input id="${id}-name" data-field="name" maxlength="80" value="${escape(build.name)}"></div><div><label for="${id}-count">${t().count}</label><input id="${id}-count" data-field="count" type="number" min="1" max="999" step="1" required value="${build.count}"></div><div><label for="${id}-status">${t().status}</label><select id="${id}-status" data-field="status">${BuildPlan.statuses.map(status => `<option value="${status}" ${status === build.status ? 'selected' : ''}>${t()[status]}</option>`).join('')}</select></div></div>${layout.length ? `<fieldset class="plan-layout"><legend>${t().layout}</legend><p class="source-note">${t().layoutHint}</p>${layout.map(([path, qty], i) => `<div class="plan-layout-row"><label for="${id}-layout-${i}">${escape(path.split('/').pop())}</label><input id="${id}-layout-${i}" data-layout="${escape(path)}" type="number" min="0" max="999" step="1" placeholder="${t().unknown}" value="${qty ?? ''}"></div>`).join('')}</fieldset>` : ''}<div class="plan-actions"><button type="button" data-action="restore">${t().restore}</button><button type="button" data-action="remove">${t().remove}</button></div></li>`;
     }).join('');
-    $('plan-files').innerHTML = summary.files.map(file => `<li class="file-card"><div class="file-info"><a class="file-name" href="${escape(encodeURI(file.path))}">${escape(file.path.split('/').pop())}</a><span class="file-path">${escape(file.path)}</span></div><span class="qty-tag">${file.unresolved ? escape(t().unknown) + (file.qty ? ` (+${file.qty})` : '') : `×${file.qty}`}</span></li>`).join('');
+    const quantity = file => file.unresolved ? t().unknown + (file.qty ? ` (+${file.qty})` : '') : `×${file.qty}`;
+    const fileMarkup = file => `<li class="file-card" data-plan-path="${escape(file.path)}"><div class="file-info"><a class="file-name" href="${escape(encodeURI(file.path))}">${escape(file.path.split('/').pop())}</a><span class="file-path">${escape(file.path)}</span></div><span class="qty-tag">${escape(quantity(file))}</span></li>`;
+    const files = $('plan-files');
+    if (!preserveEditors) files.innerHTML = summary.files.map(fileMarkup).join('');
+    else {
+      // Keep active controls attached between pointer-down, blur and click.
+      const paths = new Set(summary.files.map(file => file.path));
+      for (const row of [...files.children]) if (!paths.has(row.dataset.planPath)) row.remove();
+      const existing = new Map([...files.children].map(row => [row.dataset.planPath, row]));
+      summary.files.forEach((file, index) => {
+        const row = existing.get(file.path);
+        if (row) row.querySelector('.qty-tag').textContent = quantity(file);
+        else {
+          const template = document.createElement('template');
+          template.innerHTML = fileMarkup(file);
+          files.insertBefore(template.content.firstElementChild, files.children[index] || null);
+        }
+      });
+    }
     $('plan-hardware').innerHTML = summary.hardware.map(part => `<li><strong>${escape(part.size)}</strong><span>×${part.qty}</span></li>`).join('');
     $('plan-availability').hidden = VaultResources.connected;
     STLPreview.decorate($('plan-files'));
     LocalFiles.decorate($('plan-files'));
     storageNotice();
-    if (root.ScrollTrigger) ScrollTrigger.refresh();
+    if (root.ScrollTrigger && !preserveEditors) ScrollTrigger.refresh();
   }
-  function save(builds) { api.store.save({ builds }); render(); }
+  function save(builds, preserveEditors = false) { api.store.save({ builds }); render({ preserveEditors }); }
   function setLanguage(value) {
     language = value === 'zh' ? 'zh' : 'en';
     document.querySelectorAll('[data-plan-copy]').forEach(element => { element.textContent = t()[element.dataset.planCopy]; });
@@ -114,9 +132,8 @@
       } else if (input.dataset.field === 'count') { build.count = Number(input.value); build.status = 'pending'; }
       else if (input.dataset.field === 'name') build.name = input.value;
       else if (input.dataset.field === 'status') build.status = input.value;
-      const focusId = input.id;
-      save(builds);
-      $(focusId)?.focus();
+      row.querySelector('[data-field="status"]').value = build.status;
+      save(builds, true);
     });
     $('plan-entries').addEventListener('click', event => {
       const button = event.target.closest('button[data-action]');
