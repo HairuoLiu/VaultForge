@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f3f2ec">
   <meta name="description" content="VAULT USSA component workspace. Find printable parts, configure your drawers, and explore bilingual assembly manuals.">
-  <title>VAULT_USSA Project Hub</title>
+  <title>VaultForge — 3D Modular Storage Studio & Hardware BOM</title>
   <style>
 
     @font-face { font-family: Geist; src: url('assets/geist.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
@@ -267,7 +267,7 @@
 <main class="overflow-x-hidden w-full max-w-full" id="top">
 <div class="shell">
   <header class="header">
-    <a class="brand" href="#top" aria-label="VAULT USSA home"><span class="brand-mark" aria-hidden="true"><i></i><i></i></span><span><span class="brand-name">VAULT<span style="font-weight:350"> / USSA</span></span><span class="brand-sub">MODULAR STORAGE SYSTEM</span></span></a>
+    <a class="brand" href="#top" aria-label="VaultForge home"><span class="brand-mark" aria-hidden="true"><i></i><i></i></span><span><span class="brand-name">VAULT<span style="font-weight:350">FORGE</span></span><span class="brand-sub">MODULAR STORAGE STUDIO</span></span></a>
     <nav class="header-nav" aria-label="Main navigation"><a class="nav-link" href="#workspace" onclick="openWorkspace('finder')" data-copy="navWorkspace">Workspace</a><a class="nav-link" href="#workspace" onclick="openWorkspace('manuals')" data-copy="navManuals">Assembly library</a><button class="lang-btn" id="lang-toggle" onclick="toggleLanguage()">中文</button></nav>
   </header>
   <section class="hero" aria-labelledby="hero-title">
@@ -339,7 +339,13 @@ and prepare your first build.</p>
       <p id="flow-result-summary" class="flow-result-summary" role="status"></p>
       <div id="build-cautions" role="status"></div>
       <div class="build-preparation">
-        <section id="hardware-details" aria-labelledby="title-hardware"><h4 class="section-title" id="title-hardware"></h4><div id="hardware-spec"></div></section>
+        <section id="hardware-details" aria-labelledby="title-hardware">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+            <h4 class="section-title" id="title-hardware" style="margin:0;"></h4>
+            <button type="button" id="config-export-pdf" class="flow-text-button" style="font-size:12px; font-weight:600; color:#2e7d32; cursor:pointer;" data-flow-copy="exportReviewPdf">🖨️ 导出当前配置采购单 (PDF)</button>
+          </div>
+          <div id="hardware-spec"></div>
+        </section>
         <section id="assembly-steps" aria-labelledby="assembly-steps-title"><h4 class="section-title" id="assembly-steps-title" data-preparation-copy="assemblyTitle"></h4><ol id="build-assembly-steps"></ol></section>
       </div>
       <p id="file-action-hint" class="source-note"></p>
@@ -409,7 +415,13 @@ and prepare your first build.</p>
   </div>
 
   <div id="tab-plan" class="tab-content">
-    <div class="plan-heading"><h3 data-plan-copy="title">Your print plan</h3><button type="button" id="plan-export" data-plan-copy="export" disabled>Export CSV</button></div>
+    <div class="plan-heading">
+      <h3 data-plan-copy="title">Your print plan</h3>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <button type="button" id="plan-export-pdf" class="button primary" style="background:#2e7d32; border-color:#2e7d32; color:#fff;" data-plan-copy="exportPdf" disabled>🖨️ 导出采购单 (PDF)</button>
+        <button type="button" id="plan-export" data-plan-copy="export" disabled>Export CSV</button>
+      </div>
+    </div>
     <p class="source-note" data-plan-copy="intro"></p>
     <p id="plan-count" class="selection-code" role="status"></p>
     <p id="plan-empty" class="configuration-note" data-plan-copy="empty"></p>
@@ -472,6 +484,7 @@ and prepare your first build.</p>
 <script src="assets/sustainer-accessories.js"></script>
 <script src="assets/accessory-view.js"></script>
 <script src="assets/build-plan.js"></script>
+<script src="assets/purchase-bom.js"></script>
 <script src="assets/workspace-state.js"></script>
 <script src="assets/vault-resources.js"></script>
 <script src="assets/vault-folder.js"></script>
@@ -1055,6 +1068,13 @@ ModelLibrary.init({ language: currentLang, selection: workspaceStore.value.model
 updateStaticText();
 restoreConfiguration(currentSystem, savedConfigurations[currentSystem]);
 ModificationView.restore(workspaceStore.value.modifications);
+document.getElementById('config-export-pdf')?.addEventListener('click', () => {
+  const selected = { system: currentSystem, configuration: readConfiguration() };
+  const build = BuildPlan.entry({ ...selected, id: 'current', count: 1 });
+  if (window.PurchaseBOM) {
+    PurchaseBOM.exportPDF({ builds: [build], language: currentLang });
+  }
+});
 PrintPlanView.init({ store: workspaceStore, selection: () => ({ system: currentSystem, configuration: readConfiguration() }), restore: build => {
   savedConfigurations[currentSystem] = readConfiguration();
   restoreConfiguration(build.system, build.configuration);

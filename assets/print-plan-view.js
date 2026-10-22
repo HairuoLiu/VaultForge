@@ -6,7 +6,7 @@
     en: {
       tab: 'Print plan', title: 'Your print plan', intro: 'Combine builds into one STL and hardware list. Totals include all builds, including completed ones. Status applies to the entire named batch.',
       name: 'Build name (optional)', count: 'Number of modules', add: 'Add to print plan', view: 'View print plan', empty: 'Your plan is empty. Choose a configuration in Component Finder, then add it here.',
-      export: 'Export CSV', remove: 'Remove', restore: 'Load configuration', status: 'Batch status', pending: 'To print', printed: 'Printed', assembled: 'Assembled',
+      export: 'Export CSV', exportPdf: 'Export Purchase BOM (PDF)', remove: 'Remove', restore: 'Load configuration', status: 'Batch status', pending: 'To print', printed: 'Printed', assembled: 'Assembled',
       layout: 'Layout quantities · STL copies per module', layoutHint: 'Enter a quantity for each divider file; enter 0 when unused. Paired parts already in one STL count as one copy. Changing quantities resets the batch to “To print”.',
       unresolved: 'Fill in all layout quantities below before exporting.', files: 'Combined STL list', hardware: 'Combined hardware reference',
       copies: 'STL copies', unknown: 'Quantity needed', missing: 'Missing locally', disconnected: 'Select your Vault folder to check file availability.',
@@ -21,7 +21,7 @@
     zh: {
       tab: '打印清单', title: '你的打印清单', intro: '合并多种配置的 STL 和五金数量。汇总包含全部方案，包括已完成的方案；进度状态适用于整批模块。',
       name: '方案名称（可选）', count: '模块数量', add: '加入打印清单', view: '查看打印清单', empty: '清单还是空的。先在组件查找器选好配置，再加入打印清单。',
-      export: '导出 CSV', remove: '移除', restore: '载入配置', status: '整批进度', pending: '待打印', printed: '已打印', assembled: '已组装',
+      export: '导出 CSV', exportPdf: '🖨️ 导出采购单 (PDF)', remove: '移除', restore: '载入配置', status: '整批进度', pending: '待打印', printed: '已打印', assembled: '已组装',
       layout: '布局数量 · 每个模块的 STL 打印份数', layoutHint: '填写每种分隔板文件的份数，不需要的填 0。一个 STL 内已配对的零件按一份计算。修改数量后，整批进度重置为“待打印”。',
       unresolved: '请先补齐下方布局数量，再导出清单。', files: '合并后的 STL 清单', hardware: '五金备料汇总',
       copies: 'STL 份数', unknown: '待填数量', missing: '本地缺失', disconnected: '选择 Vault 文件夹后，可检查清单中文件是否齐全。',
@@ -56,6 +56,7 @@
     $('plan-empty').hidden = builds.length > 0;
     $('plan-content').hidden = builds.length === 0;
     $('plan-export').disabled = !builds.length || !!summary.unresolved;
+    if ($('plan-export-pdf')) $('plan-export-pdf').disabled = !builds.length;
     $('plan-unresolved').hidden = !summary.unresolved;
     $('plan-count').textContent = t().total(builds.length, builds.reduce((sum, build) => sum + build.count, 0));
     if (!preserveEditors) $('plan-entries').innerHTML = builds.map((build, index) => {
@@ -168,6 +169,13 @@
       const link = document.createElement('a');
       link.href = url; link.download = 'vault-print-plan.csv'; document.body.append(link); link.click(); link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+    $('plan-export-pdf')?.addEventListener('click', () => {
+      const builds = api.store.value.builds;
+      if (!builds || !builds.length) return;
+      if (root.PurchaseBOM) {
+        root.PurchaseBOM.exportPDF({ builds, language });
+      }
     });
     root.addEventListener('vaultchange', render);
     render();

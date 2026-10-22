@@ -1,12 +1,23 @@
-# Vault Workbench
+# VaultForge (formerly Vault-Workbench)
+
+> **Precision 3D Configurator & Hardware Sourcing BOM for VAULT Modular Storage System**
+> 
+> 🌐 **在线网页版（免安装直接运行）**：[https://HairuoLiu.github.io/VaultForge/](https://HairuoLiu.github.io/VaultForge/)
 
 **简体中文** | [English](README.en.md)
 
-USSA VAULT 的非官方本地组装工作台。选择尺寸，核对零件和五金，预览模型，再整理成打印清单。
+VaultForge 是针对 USSA VAULT 3D 打印模块化收纳柜系统的专业级配置与硬件供应链管理工作台。支持在浏览器中实时选型、三维预览、自动计算螺栓总数并**一键导出标准 A4 采购备料清单 (PDF)**。
 
-原生 HTML / CSS / JavaScript，无需安装前端依赖。STL、说明书和文件夹索引在本地处理，原始资源包需自行准备。
+原生 HTML / CSS / JavaScript 架构，零构建、零依赖。STL、说明书索引与打印清单全部在本地安全处理。
 
-![Vault Workbench：尺寸配置、顶盖选择与提手五金提示](assets/screenshots/workspace.png)
+![VaultForge：尺寸配置、顶盖选择与五金清单](assets/screenshots/workspace.png)
+
+## 核心特性
+
+- 🖨️ **一键导出五金采购清单 (PDF)**：支持单件配置及批量方案导出，自动汇总 M4/M6 螺丝总数，提供多伦多/全球最优惠采购建议与沉头/外六角防坑指南。
+- 📦 **完整规格覆盖**：支持 S/M/L/XL 抽屉系列（1F~4F）、Sustainer 工具箱（分体盖、Gridfinity 底板）、移动推车底盘改造（轴承、光轴、拉杆）。
+- 🔍 **双语混合即时检索**：733+ 个官方模型，支持中文/英文任意搜索，即点即预览。
+- 🔒 **100% 隐私安全**：基于浏览器 File System Access API 本地读取，模型无需上传云端。
 
 ## 快速开始
 
