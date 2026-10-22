@@ -333,12 +333,12 @@ and prepare your first build.</p>
         <div id="configuration-help"><h4 data-flow-copy="sizeHelp"></h4><div id="drawer-configuration-note"></div><div id="sustainer-configuration-help"><p class="source-note"><a href="#workspace" onclick="openManualAt('01', 9)" id="interior-source"></a> · <a href="#workspace" onclick="openManualAt('01', 12)" id="sustainer-naming-source"></a></p><div id="sustainer-support-note"></div></div></div></details>
       <div class="quick-action-bar">
         <div class="quick-action-info">
-          <span class="quick-action-badge" id="quick-badge">S3 · 1F</span>
+          <span class="quick-action-badge" id="quick-badge">Drawer S3 · 1F</span>
           <p id="flow-choice-summary" style="margin:0; font-size:12px; color:var(--muted);"></p>
         </div>
         <div class="quick-action-buttons">
           <button type="button" class="button primary" id="flow-review" onclick="WorkbenchFlow.review()" style="min-height:40px; padding:10px 18px; margin:0;" data-flow-copy="reviewAction">Review required parts</button>
-          <button type="button" class="btn-export-pdf" id="config-quick-export-pdf" title="直接导出当前配置所需螺丝及五金清单">🖨️ 导出采购单 (PDF)</button>
+          <button type="button" class="btn-export-pdf" id="config-quick-export-pdf" data-flow-copy="exportQuickPdf" title="Export screws and hardware purchase bill for this configuration">Export Purchase BOM (PDF)</button>
         </div>
       </div>
     </section>
@@ -351,7 +351,7 @@ and prepare your first build.</p>
         <section id="hardware-details" aria-labelledby="title-hardware">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
             <h4 class="section-title" id="title-hardware" style="margin:0;"></h4>
-            <button type="button" id="config-export-pdf" class="flow-text-button" style="font-size:12px; font-weight:600; color:#2e7d32; cursor:pointer;" data-flow-copy="exportReviewPdf">🖨️ 导出当前配置采购单 (PDF)</button>
+            <button type="button" id="config-export-pdf" class="flow-text-button" style="font-size:12px; font-weight:600; color:#2e7d32; cursor:pointer;" data-flow-copy="exportReviewPdf">Export Purchase BOM (PDF)</button>
           </div>
           <div id="hardware-spec"></div>
         </section>
@@ -427,7 +427,7 @@ and prepare your first build.</p>
     <div class="plan-heading">
       <h3 data-plan-copy="title">Your print plan</h3>
       <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-        <button type="button" id="plan-export-pdf" class="button primary" style="background:#2e7d32; border-color:#2e7d32; color:#fff;" data-plan-copy="exportPdf" disabled>🖨️ 导出采购单 (PDF)</button>
+        <button type="button" id="plan-export-pdf" class="btn-export-pdf" data-plan-copy="exportPdf" disabled>Export Purchase BOM (PDF)</button>
         <button type="button" id="plan-export" data-plan-copy="export" disabled>Export CSV</button>
       </div>
     </div>
@@ -690,6 +690,7 @@ function updateStaticText() {
   if (window.ModificationView) ModificationView.setLanguage(currentLang);
   if (window.ModelLibrary) ModelLibrary.setLanguage(currentLang);
   PrintPlanView.setLanguage(currentLang);
+  if (window.WorkbenchFlow) WorkbenchFlow.update();
   document.getElementById('ui-title').textContent = t.title;
   document.getElementById('lang-toggle').textContent = t.langToggle;
   document.getElementById('label-width').textContent = t.labelWidth;
