@@ -287,6 +287,8 @@ and prepare your first build.</p>
       <button type="button" class="tab-btn" id="tab-btn-models" data-workspace-section="models" onclick="openWorkspace('models')"><strong data-library-copy="modelsTitle"></strong><span data-library-copy="modelsHint"></span></button>
       <button type="button" class="tab-btn" id="tab-btn-modifications" data-workspace-section="modifications" onclick="openWorkspace('modifications')"><strong data-library-copy="modsTitle"></strong><span data-library-copy="modsHint"></span></button>
       <button type="button" class="tab-btn" id="tab-btn-manuals" data-workspace-section="manuals" onclick="openWorkspace('manuals')"><strong data-library-copy="manualsTitle"></strong><span data-library-copy="manualsHint"></span></button>
+      <button type="button" class="tab-btn" id="tab-btn-stacker" data-workspace-section="stacker" onclick="openWorkspace('stacker')"><strong id="nav-stacker-title">🏗️ Tower Stacker</strong><span id="nav-stacker-desc">Multi-tier tower & desk clearance</span></button>
+      <button type="button" class="tab-btn" id="tab-btn-labelmaker" data-workspace-section="labelmaker" onclick="openWorkspace('labelmaker')"><strong id="nav-label-title">🏷️ 3D Label Maker</strong><span id="nav-label-desc">Parametric watertight binary STL</span></button>
     </nav>
     <section class="vault-connection" id="vault-connection" aria-labelledby="vault-title" data-connected="false">
       <div class="vault-connection-top"><div><h3 id="vault-title">Connect your local Vault</h3><p id="vault-help"></p></div><div class="vault-summary" role="status" aria-live="polite"><strong id="vault-name">No folder connected</strong><p id="vault-counts"></p></div></div>
@@ -338,6 +340,7 @@ and prepare your first build.</p>
         </div>
         <div class="quick-action-buttons">
           <button type="button" class="button primary" id="flow-review" onclick="WorkbenchFlow.review()" style="min-height:40px; padding:10px 18px; margin:0;" data-flow-copy="reviewAction">Review required parts</button>
+          <button type="button" class="btn-export-pdf" id="config-quick-export-3mf" style="background:#2563eb; border-color:#1d4ed8; color:#ffffff;" title="Export Bambu Studio / OrcaSlicer project (.3mf)">📦 Export 3MF</button>
           <button type="button" class="btn-export-pdf" id="config-quick-export-pdf" data-flow-copy="exportQuickPdf" title="Export screws and hardware purchase bill for this configuration">Export Purchase BOM (PDF)</button>
         </div>
       </div>
@@ -356,6 +359,19 @@ and prepare your first build.</p>
           <div id="hardware-spec"></div>
         </section>
         <section id="assembly-steps" aria-labelledby="assembly-steps-title"><h4 class="section-title" id="assembly-steps-title" data-preparation-copy="assemblyTitle"></h4><ol id="build-assembly-steps"></ol></section>
+        <!-- IDEA 2: 3D INTERACTIVE EXPLODED VIEW & ASSEMBLY SIMULATOR -->
+        <section id="exploded-view-panel" style="margin: 16px 0; padding: 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <h4 class="section-title" id="exploded-title" style="margin: 0 0 8px 0; color:#1e293b;">💥 3D 机械爆炸图与装配模拟 (Exploded View)</h4>
+          <p class="source-note" id="exploded-desc" style="margin: 0 0 10px 0;">拖动滑块查看内部滑轨、锁扣与螺栓在三维空间中的展开与装配矢量 / Drag slider to expand components.</p>
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+            <label for="assembly-explode-slider" style="font-weight: 600; font-size: 13px; color:#334155;">展开进度 (Explode):</label>
+            <input type="range" id="assembly-explode-slider" min="0" max="100" value="0" style="flex: 1; cursor: pointer;">
+            <span id="assembly-explode-value" style="font-family: monospace; font-weight: 700; width: 50px; color:#0f172a;">0%</span>
+          </div>
+          <div id="assembly-stage-notes" style="font-size: 12px; color: #475569; background: #ffffff; padding: 10px; border-radius: 4px; border: 1px dashed #cbd5e1; line-height: 1.6;">
+            完全紧凑装配状态 (Fully Assembled) · 螺栓紧固 0mm · 抽屉完全闭合
+          </div>
+        </section>
       </div>
       <p id="file-action-hint" class="source-note"></p>
       <h4 class="section-title" id="title-size-files"></h4>
@@ -427,11 +443,14 @@ and prepare your first build.</p>
     <div class="plan-heading">
       <h3 data-plan-copy="title">Your print plan</h3>
       <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <button type="button" id="plan-export-3mf" class="btn-export-pdf" style="background:#2563eb; border-color:#1d4ed8; color:#ffffff;" title="Export multi-plate Bambu Studio / OrcaSlicer project (.3mf)">📦 Export 3MF Project</button>
         <button type="button" id="plan-export-pdf" class="btn-export-pdf" data-plan-copy="exportPdf" disabled>Export Purchase BOM (PDF)</button>
         <button type="button" id="plan-export" data-plan-copy="export" disabled>Export CSV</button>
       </div>
     </div>
     <p class="source-note" data-plan-copy="intro"></p>
+    <!-- IDEA 4: FILAMENT WEIGHT, TIME & COST ESTIMATOR -->
+    <div id="plan-filament-estimator" style="margin: 16px 0;"></div>
     <p id="plan-count" class="selection-code" role="status"></p>
     <p id="plan-empty" class="configuration-note" data-plan-copy="empty"></p>
     <div id="plan-content" hidden>
@@ -467,6 +486,16 @@ and prepare your first build.</p>
     </section>
     </div>
   </div>
+
+  <!-- TAB: TOWER STACKER (IDEA 3) -->
+  <div id="tab-stacker" class="tab-content" style="padding: 20px 0;">
+    <div id="stacker-container"></div>
+  </div>
+
+  <!-- TAB: 3D LABEL MAKER (IDEA 6) -->
+  <div id="tab-labelmaker" class="tab-content" style="padding: 20px 0;">
+    <div id="labelmaker-container"></div>
+  </div>
     </div>
   </section>
 </div>
@@ -499,6 +528,7 @@ and prepare your first build.</p>
 <script src="assets/label-customizer.js"></script>
 <script src="assets/slicer-project.js"></script>
 <script src="assets/assembly-animator.js"></script>
+<script src="assets/vaultforge-features-ui.js"></script>
 <script src="assets/workspace-state.js"></script>
 <script src="assets/vault-resources.js"></script>
 <script src="assets/vault-folder.js"></script>
@@ -703,6 +733,15 @@ function updateStaticText() {
   document.getElementById('label-height').textContent = t.labelHeight;
   document.getElementById('title-size-files').textContent = t.titleSizeFiles;
   document.getElementById('title-hardware').textContent = t.titleHardware;
+  if (window.VaultForgeUI) VaultForgeUI.updateLanguage();
+  const stackerTitle = document.getElementById('nav-stacker-title');
+  const stackerDesc = document.getElementById('nav-stacker-desc');
+  const labelTitle = document.getElementById('nav-label-title');
+  const labelDesc = document.getElementById('nav-label-desc');
+  if (stackerTitle) stackerTitle.textContent = currentLang === 'zh' ? '🏗️ 柜塔空间规划' : '🏗️ Tower Stacker';
+  if (stackerDesc) stackerDesc.textContent = currentLang === 'zh' ? '多层堆叠与避障检测' : 'Multi-tier tower & desk clearance';
+  if (labelTitle) labelTitle.textContent = currentLang === 'zh' ? '🏷️ 3D 铭牌定制' : '🏷️ 3D Label Maker';
+  if (labelDesc) labelDesc.textContent = currentLang === 'zh' ? '参数化水密 STL 生成' : 'Parametric watertight binary STL';
 
 }
 
@@ -1051,7 +1090,7 @@ function renderSustainerList() {
 }
 
 function updateAssemblyReference() {
-  document.getElementById('assembly').hidden = currentTab === 'models';
+  document.getElementById('assembly').hidden = currentTab === 'models' || currentTab === 'stacker' || currentTab === 'labelmaker';
   AssemblyReference.update({ system: currentTab === 'modifications' ? 'modifications' : currentSystem, configuration: readConfiguration(), language: currentLang });
 }
 
@@ -1086,6 +1125,7 @@ WorkbenchFlow.init({
 
 // Initial setup
 ModelLibrary.init({ language: currentLang, selection: workspaceStore.value.models, onChange: saveWorkspace });
+if (window.VaultForgeUI) VaultForgeUI.init();
 updateStaticText();
 restoreConfiguration(currentSystem, savedConfigurations[currentSystem]);
 ModificationView.restore(workspaceStore.value.modifications);
