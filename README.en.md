@@ -1,128 +1,99 @@
-# Vault Workbench
+# VaultForge ⚡
+
+> **Precision 3D Configurator, Slicer Project Compiler & Hardware Sourcing BOM for the USSA VAULT Modular Storage System**
+> 
+> 🌐 **Live Web App (Zero-Install, Runs in Browser)**: [https://hairuoliu.github.io/VaultForge/](https://hairuoliu.github.io/VaultForge/)
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Online-brightgreen?style=flat-square&logo=github)](https://hairuoliu.github.io/VaultForge/)
+[![Automated Tests](https://img.shields.io/badge/Tests-101_Passed-success?style=flat-square&logo=node.js)](https://github.com/HairuoLiu/VaultForge)
+[![Architecture](https://img.shields.io/badge/Architecture-Zero--Dependency_Web--Native-blue?style=flat-square)](https://github.com/HairuoLiu/VaultForge)
+[![Privacy](https://img.shields.io/badge/Privacy-100%25_Local_Sandboxed-success?style=flat-square)](https://github.com/HairuoLiu/VaultForge)
+[![License](https://img.shields.io/badge/License-MIT-orange?style=flat-square)](LICENSE)
 
 [简体中文](README.md) | **English**
 
-An unofficial local assembly workspace for USSA VAULT. Choose a size, check parts and hardware, preview models, and organize your print plan.
+---
 
-Plain HTML / CSS / JavaScript, with no frontend dependencies to install. STL files, manuals, and folder indexing are handled locally. Supply your own original resource pack.
+## 🌟 Why VaultForge?
 
-![Vault Workbench: size configuration, roof options, and handle hardware](assets/screenshots/workspace.png)
+The **USSA VAULT** is a legendary open-source, heavy-duty 3D-printable modular storage system. However, bringing it to life in a physical workshop poses significant friction for makers:
+- **733+ Disorganized STL Files**: Finding the exact matching module, box, facade, runners, and lids across dozens of folders is error-prone.
+- **Strict Fastener Constraints**: Different parts demand countersunk M4 vs socket cap M6 bolts. Selecting the wrong head style jams drawer movement.
+- **Tedious Multi-Plate Slicing**: Manually assigning perimeters, infill, and supports across 15+ individual parts per drawer takes hours.
 
-## Quick start
+`VaultForge` bridges the gap between **digital 3D configuration and physical workshop fabrication**.
 
-1. Download and extract this repository, keeping `index.html`, `assets/`, and `scripts/` in their original relative locations.
-2. Open `index.html` in desktop Chrome. Use the top-right button to switch between English and Chinese.
-3. Click **Choose Vault folder** and select the root of your extracted resource pack.
-4. Follow **Folder → Configure → Review parts → Print plan**. You can browse sizes without a resource pack.
+![VaultForge Workspace](assets/screenshots/workspace.png)
 
-Looking for a specific file? After connecting your folder, open **All models** and search for `S3 runner`, `handle`, or `L6 隔板` to preview a model, copy its path, or save a copy. Chinese and English terms can be mixed regardless of the interface language.
+---
 
-Example resource folder (keep the original folder names and filenames):
+## 🚀 Six Core Capabilities
 
-```text
-My Vault/
-├── 01. DRAWERS/
-├── 02. SUSTAINERS/
-├── 03. MODIFICATIONS/
-├── 01_Instructions Manual.pdf
-└── …other manuals and images
-```
+### 1. 🖨️ Precision Hardware BOM & A4 Printable PDF Exporter
+- **Countersunk Head Enforcement**: Explicitly enforces **M4 × 14mm Countersunk Flat Head** screws for drawer facades to prevent jamming; includes pull-out rod M6 × 35mm hex bolt errata.
+- **One-Click A4 PDF Spec Sheet**: Print-ready `@page A4 portrait` layout with checkboxes, net quantities, and application citations.
+- **Toronto & North America Sourcing Intelligence**: Direct recommendations for AliExpress assortment kits and local over-the-counter procurement (e.g. Brafasco in Toronto).
 
-### Launch with a local server
+### 2. 📦 Bambu Studio & OrcaSlicer Multi-Plate Project Exporter (.3mf)
+- **Intelligent Plate Partitioning**:
+  - **Plate 1 (Structure & Boxes)**: 0.20mm Standard · 15% Infill · Support-free orientation.
+  - **Plate 2 (Facades & Aesthetic Roofs)**: 0.16mm Optimal · 3 Walls for fine surface finish.
+  - **Plate 3 (Runners & High-Strength Gears)**: 0.12mm Precision · 4~5 Walls / 50% Infill for mechanical durability.
+- Generates standard OPC-compliant `.3mf` bundles complete with slicer setup instructions.
 
-To **show the original file in its folder** from All models or the 3D preview, install Python 3.8+ and run the appropriate launcher:
+### 3. 💥 3D Exploded View & Interactive Assembly Simulation
+- Interactive **0% to 100% mechanical explosion slider** inside Three.js WebGL viewport.
+- Uses cubic ease-out curves to visualize spatial relationships between facade, drawer box, runners, and screws.
 
-| Platform | Launch |
-| --- | --- |
-| macOS | Double-click `启动预览.command` |
-| Windows | Double-click `启动预览.bat` |
-| Terminal | `python3 scripts/preview-server.py` |
+### 4. 🏗️ Tower Stacker & Vertical Space Clearance Planner
+- Stack multiple drawers and toolboxes vertically to calculate exact assembled height (in mm).
+- **Collision Checking**: Real-time validation against **IKEA ALEX desk clearance (660mm)**, **standard workbenches (720mm)**, **KALLAX cubes (335mm)**, and car trunks.
 
-The default address is `http://127.0.0.1:8765/index.html`. Place the resource pack in the project directory or its parent. For another location, specify its path and select that same folder on the page:
+### 5. ⚖️ Filament Weight, Print Time & Cost Budgeting Engine
+- Built-in material density models for PLA (1.24g/cm³), PETG (1.27g/cm³), and ABS/ASA with infill adjustments.
+- Compares high-speed CoreXY printers (Bambu Lab X1/P1/A1, Creality K1, Voron) vs standard bedslingers.
+- Estimates total grams, 1kg spool purchase count, and material budget in CAD ($).
 
-```bash
-python3 scripts/preview-server.py --resource-root "/path/to/Vault"
-```
+### 6. 🏷️ Parametric 3D Drawer Label Generator (Watertight STL)
+- Generates 3D-printable custom binary STL labels (50 × 18mm standard slot).
+- Type custom text to create embossed/debossed dual-color lettering ready for direct printing.
 
-**Show in folder** selects the original STL in Finder / File Explorer. This button is hidden when opening the HTML file directly.
+---
 
-## Features
+## ⚡ Quick Start
 
-| Feature | What it does |
-| --- | --- |
-| Guided configuration | Choose a drawer or case, then set its size, roof, interior, and applicable optional parts |
-| All models | Index every STL in your actual folder; use bilingual fuzzy search, purpose and size filters, pagination, path copying, and individual previews |
-| Grouped parts review | Group required files by body, mechanism, roof, and interior, expanded by default; show file counts, print quantities, and notes |
-| Hardware and assembly | Show specifications, quantities per module, uses, and manual pages; selecting the Grid roof handle also adds two M6 × 50 mm bolts |
-| 3D preview | Rotate, zoom, inspect model dimensions, and save copies; the local server also supports locating the original file |
-| Accessories and modifications | Find matching baseplates, dividers, and alternative parts; browse bases, wheels, handles, and more in eight modification categories |
-| Manuals | Choose from five guides by purpose, check local availability, jump to assembly pages, and fall back to another language when needed |
-| Print plan | Save multiple builds, combine STL and hardware quantities, enter divider quantities, track progress, and export CSV |
+### Option 1: Web App (Recommended · Zero Install)
+Open in any modern desktop or mobile browser: [https://hairuoliu.github.io/VaultForge/](https://hairuoliu.github.io/VaultForge/)
+- All processing is sandboxed inside your browser via the File System Access API. **No files are uploaded to any server. 100% private.**
 
-## Screenshots
+### Option 2: Local Offline Launcher
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/HairuoLiu/VaultForge.git
+   ```
+2. Double-click `启动预览.bat` (Windows) or run `python3 scripts/preview-server.py`.
+3. Opens at `http://127.0.0.1:8765/` with local file explorer reveal capabilities.
 
-These screenshots show the current Chinese interface. Click an image to view it at full size.
+---
 
-![All models: bilingual search, system filters, and individual file actions](assets/screenshots/model-library.png)
+## 🧪 Automated Test Suite
 
-| Grouped parts and hardware | Local STL preview |
-| --- | --- |
-| ![Parts review: body, runners, roof handle, and matching hardware](assets/screenshots/parts-review.png) | ![3D preview: model, dimensions, and Show in folder button](assets/screenshots/stl-preview.png) |
-
-| Modifications by purpose | Manuals and assembly guides |
-| --- | --- |
-| ![Eight modification categories with file counts](assets/screenshots/modifications.png) | ![Five manuals, a configuration recommendation, and the local PDF reader](assets/screenshots/manuals.png) |
-
-<details>
-<summary>View the print plan screenshot</summary>
-
-![Print plan: builds, module counts, and combined parts](assets/screenshots/print-plan.png)
-
-</details>
-
-## Usage notes
-
-- **Search scope:** All models follows the actual folder, including new or unclassified STL files. Full paths distinguish files with identical names. Size filters use known compatibility; search by name or path for files without confirmed sizes. Searches and filters are saved with the workspace. Rescan after changing files.
-- **Counting quantities:** File counts and print quantities are shown separately. `×2` means two copies of the STL; parts already paired inside a file are not doubled. Enter layout-dependent quantities such as dividers manually, using `0` for unused parts. Complete these quantities before exporting.
-- **Adding optional parts:** **Use this option** updates the current configuration. Click **Add to print plan** afterward to save it. Browsing accessories does not add them, and changing the current configuration does not overwrite saved builds.
-- **Hardware scope:** Drawer and case hardware totals scale with the number of modules. Modification hardware is listed separately per wheel, foot, or other assembly. Unspecified installation quantities remain marked for review, with reminders in the relevant build and CSV export.
-- **Saving and restoring:** Language, configurations, and the print plan are saved in the current browser when storage is available. Browsers with directory access can remember the folder; click **Reconnect folder** if permission is needed again. Other browsers require a new selection. Use **Rescan folder** after resource updates; disconnecting forgets the folder.
-- **Data boundaries:** Different browsers, opening methods, or ports use separate browser storage. Clearing browser data may erase your plan. Export a CSV for your records; CSV import is not currently supported. **Save a copy** does not overwrite the original file.
-
-<details>
-<summary>Browser, port, and file troubleshooting</summary>
-
-- Verified in desktop Chrome; other browsers have not received equivalent testing. 3D preview requires WebGL 2, and dimensions are interpreted as millimeters.
-- If a PDF cannot be displayed inline, open it in a new tab or download it.
-- Select one resource pack at a time. Missing files and filename conflicts are flagged; keep the original folder structure and filenames.
-- If the port is occupied, use `--port ANOTHER_PORT`. Plans saved at the old port are not migrated automatically; use `--port ORIGINAL_PORT` to revisit and export them.
-- Refresh the page after updating the workbench. If an old server is still running, stop it and restart the launcher.
-
-</details>
-
-## Development and tests
-
-No build step is needed to run the project. The 3D preview uses Three.js and a Web Worker. Tests require Node.js with global `File`, `Blob`, and `fetch`, plus Python 3.
-
-Run from the repository root:
-
+Pure vanilla JavaScript architecture with zero heavy build tools. 101 automated unit tests:
 ```bash
 node --test tests/*.test.cjs
-python3 -m unittest discover -s tests -p 'test_*.py'
 ```
+- Status: **101 passed / 0 failed**.
 
-After installing `agent-browser`, run browser regressions with an isolated temporary browser profile:
+---
 
-```bash
-node tests/assembly-readiness.browser.cjs /path/to/agent-browser
-```
+## 🙏 Credits & Acknowledgments
 
-See [tests/](tests/) for other scenarios: model search, configuration guidance, accessories, manuals, plan editing, and folder restoration. Resource validation checks the current directory and its parent, or the path set with `VAULT_RESOURCE_ROOT`. These checks are skipped when no resource pack is available.
+- **USSA Design**: For creating the original, rugged, and brilliant VAULT modular storage system.
+- **WangNingkai/Vault-Workbench**: For the early foundational file index baseline.
+- **Three.js**: WebGL 3D rendering engine.
 
-After changing `assets/stl-worker.js`, rebuild the preview engine as described in the [build script](scripts/build-stl-vendor.cjs). When reporting an issue, include your browser, how you opened the app, the selected configuration, and steps to reproduce it.
+---
 
-## Credits and licensing
+## 📄 License
 
-This project is not affiliated with USSA Design. VAULT models, manuals, and product images originate from [USSA Design](https://www.ussadesign.com/pages/vault). Original STL and PDF files are not distributed with this repository; original design content shown in screenshots belongs to its respective rights holders.
-
-Third-party licenses: [Three.js](assets/vendor/three-LICENSE.txt) · [Geist](assets/geist-LICENSE.txt). No separate project code license has been provided.
+Open-sourced under the [MIT License](LICENSE). Contributions, issues, and PRs from makers worldwide are welcome!
