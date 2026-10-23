@@ -784,34 +784,36 @@ function loadPdf(manualId, page = null) {
     button.classList.toggle('active-doc', selected);
     button.setAttribute('aria-pressed', String(selected));
   });
-  const url = manual ? VaultResources.getURL(manual.path) : null;
-  document.getElementById('manual-filename').textContent = manual ? manual.file.name : i18n[currentLang]['mbtn' + manualId];
+  const bundledName = VaultResources.manuals[manualId]?.[currentLang === 'zh' ? 'zh' : 'en'] || VaultResources.manuals[manualId]?.['en'];
+  const bundledUrl = bundledName ? `manuals/${bundledName}` : null;
+  const effectiveUrl = url || bundledUrl;
+  const effectiveName = manual ? manual.file.name : (bundledName || i18n[currentLang]['mbtn' + manualId]);
+  document.getElementById('manual-filename').textContent = effectiveName;
   const visible = document.getElementById('tab-manuals').classList.contains('active');
-  frame.hidden = !url || !visible;
-  if (url && visible) {
-    // Cross-language page mappings have not been verified; fall back to page one.
-    const targetPage = manual.fallback ? null : page;
-    const nextSrc = url + '#' + (targetPage ? `page=${targetPage}&` : '') + 'view=FitH&toolbar=1';
+  frame.hidden = !effectiveUrl || !visible;
+  if (effectiveUrl && visible) {
+    const targetPage = manual && manual.fallback ? null : page;
+    const nextSrc = effectiveUrl + '#' + (targetPage ? `page=${targetPage}&` : '') + 'view=FitH&toolbar=1';
     if (frame.getAttribute('src') !== nextSrc) {
-      // Chromium's PDF viewer ignores fragment-only navigation on an existing frame.
-      if (frame.getAttribute('src')?.split('#')[0] === url) {
+      if (frame.getAttribute('src')?.split('#')[0] === effectiveUrl) {
         const replacement = frame.cloneNode(false);
         replacement.src = nextSrc;
         frame.replaceWith(replacement);
         frame = replacement;
       } else frame.src = nextSrc;
     }
-    frame.title = i18n[currentLang]['mbtn' + manualId] + (manual.language === 'zh' ? ' — 中文' : ' — English');
+    frame.title = i18n[currentLang]['mbtn' + manualId] + (currentLang === 'zh' ? ' · 中文版 PDF' : ' · English PDF');
   } else frame.removeAttribute('src');
   for (const id of ['manual-open', 'manual-download']) {
     const link = document.getElementById(id);
-    link.setAttribute('aria-disabled', String(!url));
-    if (url) { link.href = url + (id === 'manual-open' && page && !manual.fallback ? `#page=${page}` : ''); link.removeAttribute('tabindex'); }
+    link.setAttribute('aria-disabled', String(!effectiveUrl));
+    if (effectiveUrl) { link.href = effectiveUrl + (id === 'manual-open' && page && !(manual && manual.fallback) ? `#page=${page}` : ''); link.removeAttribute('tabindex'); }
     else { link.removeAttribute('href'); link.tabIndex = -1; }
     if (id === 'manual-download') {
-      if (manual) link.download = manual.file.name;
+      if (effectiveName) link.download = effectiveName;
       else link.removeAttribute('download');
     }
+  }
   }
   let message = '';
   if (!VaultResources.connected) message = zh ? '请先在上方选择 Vault 文件夹，即可阅读本地说明书。' : 'Choose your Vault folder above to read its manuals.';
