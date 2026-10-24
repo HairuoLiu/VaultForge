@@ -48,19 +48,24 @@
       const recommended = system === 'sustainers' ? '03' : '02';
       for (const [id, [title, description]] of Object.entries(t.books)) {
         const manual = VaultResources.manual(id, language);
-        const state = !VaultResources.connected ? 'disconnected' : !manual ? 'missing' : 'ready';
-        const status = state === 'ready' ? (manual.language === 'zh' ? '中文' : 'English') + ' · ' + (manual.fallback ? t.fallback : t.ready) : t[state];
+        const hasBundled = Boolean(VaultResources.manuals[id]?.[language === 'zh' ? 'zh' : 'en'] || VaultResources.manuals[id]?.['en']);
+        const state = (!VaultResources.connected && !hasBundled) ? 'disconnected' : (!VaultResources.connected && hasBundled) ? 'ready' : !manual ? 'missing' : 'ready';
+        const langLabel = (manual ? manual.language : (language === 'zh' ? 'zh' : 'en')) === 'zh' ? '中文' : 'English';
+        const isFallback = manual ? manual.fallback : false;
+        const status = state === 'ready' ? langLabel + ' · ' + (isFallback ? t.fallback : t.ready) : t[state];
         const button = $('mbtn-' + id);
         button.innerHTML = `<span class="manual-number" aria-hidden="true">${id}</span><span class="manual-card-body"><strong>${title}</strong><span class="manual-card-description">${description}</span><span class="manual-card-meta"><span class="manual-state" data-state="${state}">${status}</span>${id === recommended ? `<span class="manual-recommended">${t.recommended}</span>` : ''}</span></span>`;
         button.setAttribute('aria-controls', 'manual-reader');
       }
       const book = t.books[manualId];
       const manual = VaultResources.manual(manualId, language);
+      const hasBundledCur = Boolean(VaultResources.manuals[manualId]?.[language === 'zh' ? 'zh' : 'en'] || VaultResources.manuals[manualId]?.['en']);
       $('manual-title').textContent = book[0];
       $('manual-description').textContent = book[1];
-      $('manual-language').textContent = manual ? (manual.language === 'zh' ? '中文 PDF' : 'English PDF') : 'PDF';
-      $('manual-connect').hidden = VaultResources.connected;
-      $('manual-filename').hidden = !manual;
+      const displayZh = manual ? (manual.language === 'zh') : (language === 'zh');
+      $('manual-language').textContent = displayZh ? '中文 PDF' : 'English PDF';
+      $('manual-connect').hidden = VaultResources.connected || hasBundledCur;
+      $('manual-filename').hidden = !manual && !hasBundledCur;
     },
     read(id) {
       loadPdf(id);

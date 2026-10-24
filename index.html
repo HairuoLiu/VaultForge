@@ -776,6 +776,7 @@ function loadPdf(manualId, page = null) {
   currentManualPage = page;
   saveWorkspace();
   const manual = VaultResources.manual(manualId, currentLang);
+  const localUrl = manual ? VaultResources.getURL(manual.path) : null;
   let frame = document.getElementById('pdf-frame');
   const status = document.getElementById('manual-status');
   const zh = currentLang === 'zh';
@@ -785,15 +786,15 @@ function loadPdf(manualId, page = null) {
     button.setAttribute('aria-pressed', String(selected));
   });
   const bundledName = VaultResources.manuals[manualId]?.[currentLang === 'zh' ? 'zh' : 'en'] || VaultResources.manuals[manualId]?.['en'];
-  const bundledUrl = bundledName ? `manuals/${bundledName}` : null;
-  const effectiveUrl = url || bundledUrl;
+  const bundledUrl = bundledName ? 'manuals/' + bundledName : null;
+  const effectiveUrl = localUrl || bundledUrl;
   const effectiveName = manual ? manual.file.name : (bundledName || i18n[currentLang]['mbtn' + manualId]);
   document.getElementById('manual-filename').textContent = effectiveName;
   const visible = document.getElementById('tab-manuals').classList.contains('active');
   frame.hidden = !effectiveUrl || !visible;
   if (effectiveUrl && visible) {
     const targetPage = manual && manual.fallback ? null : page;
-    const nextSrc = effectiveUrl + '#' + (targetPage ? `page=${targetPage}&` : '') + 'view=FitH&toolbar=1';
+    const nextSrc = effectiveUrl + '#' + (targetPage ? 'page=' + targetPage + '&' : '') + 'view=FitH&toolbar=1';
     if (frame.getAttribute('src') !== nextSrc) {
       if (frame.getAttribute('src')?.split('#')[0] === effectiveUrl) {
         const replacement = frame.cloneNode(false);
@@ -807,19 +808,21 @@ function loadPdf(manualId, page = null) {
   for (const id of ['manual-open', 'manual-download']) {
     const link = document.getElementById(id);
     link.setAttribute('aria-disabled', String(!effectiveUrl));
-    if (effectiveUrl) { link.href = effectiveUrl + (id === 'manual-open' && page && !(manual && manual.fallback) ? `#page=${page}` : ''); link.removeAttribute('tabindex'); }
+    if (effectiveUrl) { link.href = effectiveUrl + (id === 'manual-open' && page && !(manual && manual.fallback) ? '#page=' + page : ''); link.removeAttribute('tabindex'); }
     else { link.removeAttribute('href'); link.tabIndex = -1; }
     if (id === 'manual-download') {
       if (effectiveName) link.download = effectiveName;
       else link.removeAttribute('download');
     }
   }
-  }
   let message = '';
-  if (!VaultResources.connected) message = zh ? '请先在上方选择 Vault 文件夹，即可阅读本地说明书。' : 'Choose your Vault folder above to read its manuals.';
-  else if (!manual) message = zh ? '所选文件夹中未找到此说明书的中文或英文版本。补充文件后，请重新扫描资源文件夹。' : 'Neither language version of this manual was found. Add the file, then rescan the resource folder.';
-  else if (manual.fallback) message = zh ? '本地未找到中文版，已显示英文版。' : 'No English copy was found. Showing the Chinese version.';
-  if (manual?.fallback && page) message += zh ? ' 跨语言页码尚未核对，已打开首页。' : ' Page numbers have not been matched across languages; opened at page one.';
+  if (manual && manual.fallback) {
+    message = zh ? '本地未找到中文版，已显示英文版。' : 'No English copy was found. Showing the Chinese version.';
+    if (page) message += zh ? ' 跨语言页码尚未核对，已打开首页。' : ' Page numbers have not been matched across languages; opened at page one.';
+  } else if (!effectiveUrl) {
+    if (!VaultResources.connected) message = zh ? '请先在上方选择 Vault 文件夹，即可阅读本地说明书。' : 'Choose your Vault folder above to read its manuals.';
+    else message = zh ? '所选文件夹中未找到此说明书的中文或英文版本。补充文件后，请重新扫描资源文件夹。' : 'Neither language version of this manual was found. Add the file, then rescan the resource folder.';
+  }
   status.textContent = message;
   status.hidden = !message;
   ResourceLibrary.update({ language: currentLang, system: currentSystem, tab: currentTab, manualId });
